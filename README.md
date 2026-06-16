@@ -1,29 +1,31 @@
-# Mario Kart Track Picker
+# MKPicker
 
-A webapp that helps you pick the optimal track to vote for in Mario Kart based on your finishing position in the last race and the three tracks available to vote on next.
+A web app that recommends which track to vote for in Mario Kart World based on your finishing position in the last race and the three tracks up for vote.
 
 ## How It Works
 
 1. Enter your finishing position from the last race
-2. Enter the three tracks available to vote on
-3. Get a recommendation for which track to vote for based on optimal starting strategy and race conditions for each track
+2. Enter the three available tracks to vote on
+3. Get a recommendation based on optimal starting grid position and race conditions for each track
 
 ## Tech Stack
 
-- **Frontend:** React, TypeScript, Vite
-- **Backend:** FastAPI, Pydantic, Uvicorn
+**Frontend:** React, TypeScript, Vite
 
-## Getting Started
+**Backend:** FastAPI, Pydantic, Uvicorn
+
+- REST API with typed request/response validation
+
+**Database:** SQLite
+
+## Roadmap
+
+- [ ] Design database schema
+- [ ] Seed database with track data and optimal strategies
+- [ ] Rule-based recommendation engine
+- [ ] Frontend UI
 
 ### Prerequisites
 
 - Node.js
-- Python3
-
-Runs at `http://localhost:5173`
-
-### Backend
-
-```
-
-```
+- Python 3
