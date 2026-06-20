@@ -6,5 +6,4 @@ URL_DATABASE = "sqlite:///./mariokart.db"
 engine = create_engine(URL_DATABASE, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-class Base(declarative_base()):
-    pass
+Base = declarative_base()
