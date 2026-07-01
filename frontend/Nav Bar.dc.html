@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/base.css">
+  <link rel="stylesheet" href="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/styles.css">
+  <script src="_ds/mk-picker-design-system-6a585166-90a8-4c39-8a9a-62bee6da11ed/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--ink-50); }
+  </style>
+</helmet>
+
+<div style="min-height: 100vh; font-family: var(--font-body);">
+  <header style="position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 3px solid var(--ink-900); box-shadow: 0 2px 0 rgba(22,19,32,0.06);">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 20px;">
+
+      <x-import component-from-global-scope="MKPickerDesignSystem_6a5851.Logo" size="28" hint-size="150px,34px"></x-import>
+
+      <div style="margin-left: 6px;">
+        <x-import component-from-global-scope="MKPickerDesignSystem_6a5851.Tabs" value="{{ tab }}" onChange="{{ setTab }}" tabs="{{ tabs }}" hint-size="320px,42px"></x-import>
+      </div>
+
+      <div style="flex: 1; max-width: 320px; margin-left: auto;">
+        <x-import component-from-global-scope="MKPickerDesignSystem_6a5851.Input" icon="search" placeholder="Search tracks…" value="{{ query }}" onChange="{{ onQuery }}" wrap-style="{{ inputWrap }}" hint-size="320px,42px"></x-import>
+      </div>
+
+      <x-import component-from-global-scope="MKPickerDesignSystem_6a5851.Button" variant="secondary" icon-left="shuffle" onClick="{{ onSpin }}" hint-size="150px,42px">Pick for me</x-import>
+
+      <x-import component-from-global-scope="MKPickerDesignSystem_6a5851.IconButton" icon="settings" variant="ghost" label="Settings" hint-size="42px,42px"></x-import>
+
+      <x-import component-from-global-scope="MKPickerDesignSystem_6a5851.Avatar" name="Luna Park" color="var(--star-purple)" ring="{{ true }}" hint-size="40px,40px"></x-import>
+    </div>
+
+    <sc-if value="{{ picked }}" hint-placeholder-val="{{ true }}">
+      <div style="background: var(--mushroom); border-top: 3px solid var(--ink-900);">
+        <div style="max-width: 1180px; margin: 0 auto; padding: 7px 24px; display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-weight: 700; font-size: 14px; color: #fff;">
+          <span style="width: 16px; height: 16px; border-radius: 5px; background: var(--coin-500); border: 2px solid var(--ink-900);"></span>
+          Pick locked! — Sunset Speedway added to your Boost Cup.
+        </div>
+      </div>
+    </sc-if>
+  </header>
+
+  <main style="max-width: 1180px; margin: 0 auto; padding: 40px 24px;">
+    <p class="mk-eyebrow" style="margin: 0 0 8px;">NOW VIEWING</p>
+    <h1 style="font-family: var(--font-display); font-size: 44px; letter-spacing: -0.02em; color: var(--ink-900); margin: 0;">{{ heading }}</h1>
+    <p style="color: var(--text-body); font-size: 17px; max-width: 560px; margin: 12px 0 0;">{{ blurb }}</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1180, &quot;height&quot;: 460 },
+  &quot;showPickForMe&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Nav&quot; }
+}">
+class Component extends DCLogic {
+  state = { tab: "browse", query: "", picked: false };
+
+  renderVals() {
+    const tab = this.state.tab;
+    const showSpin = this.props.showPickForMe ?? true;
+    const copy = {
+      browse: { heading: "Browse tracks", blurb: "96 courses, filtered your way. Sort by cup, length, item luck, or that one shortcut you keep missing." },
+      tier:   { heading: "Tier list", blurb: "Drag tracks into S through F and build the ranking you actually race by." },
+    };
+    const c = copy[tab] || copy.browse;
+    return {
+      tab,
+      query: this.state.query,
+      picked: this.state.picked,
+      heading: c.heading,
+      blurb: c.blurb,
+      inputWrap: { width: "100%" },
+      tabs: [
+        { value: "browse", label: "Browse", icon: "map", count: 96 },
+        { value: "tier", label: "Tier list", icon: "trophy" },
+      ],
+      setTab: (v) => this.setState({ tab: v }),
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      onSpin: showSpin ? () => this.setState({ picked: true }) : undefined,
+    };
+  }
+}
+</script>
+</body>
+</html>

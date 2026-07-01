@@ -32,6 +32,8 @@ export type { SwitchProps } from "./forms/Switch";
 
 export { Tabs } from "./navigation/Tabs";
 export type { TabsProps, TabItem } from "./navigation/Tabs";
+export { TopNav } from "./navigation/TopNav";
+export type { TopNavProps } from "./navigation/TopNav";
 
 export { StatBar } from "./data/StatBar";
 export type { StatBarProps } from "./data/StatBar";
