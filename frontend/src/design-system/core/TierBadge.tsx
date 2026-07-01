@@ -10,7 +10,7 @@ export interface TierBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
  * TierBadge — the signature ranking chip (S / A / B / C / D / F).
  * Each tier has a fixed brand color. Used in tier lists and on track cards.
  */
-const TIERS = {
+const TIERS: Record<string, string> = {
   S: "var(--tier-s)",
   A: "var(--tier-a)",
   B: "var(--tier-b)",

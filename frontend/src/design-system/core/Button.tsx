@@ -45,7 +45,7 @@ export function Button({
   };
   const p = palettes[variant] || palettes.primary;
 
-  const base = {
+  const base: React.CSSProperties = {
     display: block ? "flex" : "inline-flex",
     width: block ? "100%" : undefined,
     alignItems: "center",

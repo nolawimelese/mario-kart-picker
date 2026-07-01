@@ -4,7 +4,7 @@ import { IconButton } from "../core/IconButton";
 import { Tabs } from "./Tabs";
 import type { TabItem } from "./Tabs";
 
-export interface TopNavProps extends React.HTMLAttributes<HTMLElement> {
+export interface TopNavProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
   tabs?: TabItem[];
   value?: string;
   defaultValue?: string;
