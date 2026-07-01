@@ -20,12 +20,16 @@ A web app that recommends which track to vote for in Mario Kart World based on y
 
 ## Roadmap
 
-- [ ] Design database schema
-- [ ] Seed database with track data and optimal strategies
-- [ ] Rule-based recommendation engine
-- [ ] Frontend UI
-
-### Prerequisites
-
-- Node.js
-- Python 3
+- Develop Components
+  - Browse Tab
+    - [x] UI
+    - [ ] Seed track table with information contained on each track card
+    - [ ] Remove template cards, link backend so cards contain real information
+    - [ ] Add icons for cup, and dlc status
+  - Track Picker (flagship feature)
+    - [ ] UI
+    - [ ] Seed strategies table
+    - [ ] Develop rule based algo
+    - [ ] Pre racing tips & tricks page
+  - Kart combo previewer
+    - TBD
