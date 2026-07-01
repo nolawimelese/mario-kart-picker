@@ -8,6 +8,7 @@ class Track(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     image_url = Column(String, index=True)
+    tags = Column(String, index=True)
     strategies = relationship("Strategy", back_populates="track")
 
 class Strategy(Base):

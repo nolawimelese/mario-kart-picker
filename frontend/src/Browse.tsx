@@ -1,20 +1,11 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import "./Browse.css";
-import { Badge, Card, IconButton, Select, StatBar, Switch, Tag, TierBadge } from "./design-system";
+import { Badge, Card, IconButton, Input, StatBar, Switch, Tag } from "./design-system";
 import { TRACKS } from "./data/tracks";
 import type { Track } from "./data/tracks";
 
-const ENGINE_CLASSES = ["50cc", "100cc", "150cc", "200cc"];
 const ALL_TRAITS = ["Shortcuts", "Anti-grav", "Glider", "Water", "Item-heavy", "Technical", "Chaos", "Beginner"];
-const SORT_OPTIONS = [
-  { value: "tier", label: "Tier (S → F)" },
-  { value: "speed", label: "Speed" },
-  { value: "technical", label: "Technical" },
-  { value: "chaos", label: "Chaos" },
-  { value: "shortcuts", label: "Shortcuts" },
-];
-const TIER_ORDER: Record<Track["tier"], number> = { S: 0, A: 1, B: 2, C: 3, D: 4, F: 5 };
 
 const eyebrow: CSSProperties = {
   fontFamily: "var(--font-ui)",
@@ -24,10 +15,6 @@ const eyebrow: CSSProperties = {
   textTransform: "uppercase",
   color: "var(--ink-500)",
 };
-
-function statByLabel(track: Track, label: string) {
-  return track.stats.find((s) => s.label.toLowerCase() === label)?.value ?? -1;
-}
 
 interface TrackCardProps {
   track: Track;
@@ -49,7 +36,6 @@ function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
           borderTopRightRadius: "calc(var(--radius-lg) - 2px)",
         }}
       >
-        <TierBadge tier={track.tier} size="sm" style={{ position: "absolute", top: 12, left: 12 }} />
         <IconButton
           icon="heart"
           round
@@ -91,11 +77,10 @@ function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
 
 /**
  * Browse — search & filter every track in the catalog. Sidebar filters
- * (engine class, sort, traits, favorites) narrow the card grid on the right.
+ * (traits, favorites) narrow the card grid on the right.
  */
 export function Browse() {
-  const [engineClass, setEngineClass] = useState("150cc");
-  const [sortBy, setSortBy] = useState("tier");
+  const [search, setSearch] = useState("");
   const [selectedTraits, setSelectedTraits] = useState<Set<string>>(new Set());
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -117,34 +102,24 @@ export function Browse() {
   }
 
   const tracks = useMemo(() => {
-    const filtered = TRACKS.filter((t) => {
+    const query = search.trim().toLowerCase();
+    return TRACKS.filter((t) => {
+      if (query && !t.name.toLowerCase().includes(query)) return false;
       if (favoritesOnly && !favorites.has(t.id)) return false;
       for (const trait of selectedTraits) if (!t.traits.includes(trait)) return false;
       return true;
     });
-    return filtered.sort((a, b) =>
-      sortBy === "tier" ? TIER_ORDER[a.tier] - TIER_ORDER[b.tier] : statByLabel(b, sortBy) - statByLabel(a, sortBy)
-    );
-  }, [selectedTraits, favoritesOnly, favorites, sortBy]);
+  }, [search, selectedTraits, favoritesOnly, favorites]);
 
   return (
     <div style={{ display: "flex", gap: 40, padding: 40, alignItems: "flex-start" }}>
       <aside style={{ width: 260, flexShrink: 0, display: "flex", flexDirection: "column", gap: 28 }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <span style={eyebrow}>Engine class</span>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {ENGINE_CLASSES.map((cc) => (
-              <Tag key={cc} selected={engineClass === cc} onClick={() => setEngineClass(cc)}>
-                {cc}
-              </Tag>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <span style={eyebrow}>Sort by</span>
-          <Select options={SORT_OPTIONS} value={sortBy} onChange={(e) => setSortBy(e.target.value)} />
-        </div>
+        <Input
+          icon="search"
+          placeholder="Search tracks..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <span style={eyebrow}>Track traits</span>
@@ -168,7 +143,7 @@ export function Browse() {
             All tracks
           </h1>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--ink-500)" }}>
-            {tracks.length} tracks &middot; {engineClass}
+            {tracks.length} tracks
           </span>
         </div>
 

@@ -1,7 +1,5 @@
 import type { IconName } from "../design-system";
 
-export type Tier = "S" | "A" | "B" | "C" | "D" | "F";
-
 export interface TrackStat {
   label: string;
   value: number;
@@ -13,7 +11,6 @@ export interface Track {
   id: string;
   name: string;
   cup: string;
-  tier: Tier;
   distanceKm: number;
   laps: number;
   /** Traits shown as chips under the title (also used for filtering). */
@@ -25,7 +22,7 @@ export interface Track {
 
 /**
  * Mock track catalog for the Browse page. The backend `/tracks` endpoint
- * only stores name + strategies today, so this stands in until cup/tier/
+ * only stores name + strategies today, so this stands in until cup/
  * stat fields are seeded — swap for a fetch() once the API grows them.
  */
 export const TRACKS: Track[] = [
@@ -33,7 +30,6 @@ export const TRACKS: Track[] = [
     id: "sunset-speedway",
     name: "Sunset Speedway",
     cup: "Boost Cup",
-    tier: "S",
     distanceKm: 2.1,
     laps: 3,
     traits: ["Shortcuts", "Anti-grav"],
@@ -48,7 +44,6 @@ export const TRACKS: Track[] = [
     id: "neon-circuit",
     name: "Neon Circuit",
     cup: "Star Cup",
-    tier: "S",
     distanceKm: 2.4,
     laps: 3,
     traits: ["Technical", "Anti-grav"],
@@ -63,7 +58,6 @@ export const TRACKS: Track[] = [
     id: "skyline-rush",
     name: "Skyline Rush",
     cup: "Star Cup",
-    tier: "S",
     distanceKm: 2.6,
     laps: 3,
     traits: ["Glider", "Technical"],
@@ -78,7 +72,6 @@ export const TRACKS: Track[] = [
     id: "coral-cove",
     name: "Coral Cove",
     cup: "Shell Cup",
-    tier: "A",
     distanceKm: 1.9,
     laps: 3,
     traits: ["Water", "Item-heavy"],
@@ -93,7 +86,6 @@ export const TRACKS: Track[] = [
     id: "volcano-vault",
     name: "Volcano Vault",
     cup: "Star Cup",
-    tier: "A",
     distanceKm: 2.3,
     laps: 3,
     traits: ["Chaos", "Anti-grav"],
@@ -108,7 +100,6 @@ export const TRACKS: Track[] = [
     id: "galaxy-gate",
     name: "Galaxy Gate",
     cup: "Boost Cup",
-    tier: "A",
     distanceKm: 2.8,
     laps: 3,
     traits: ["Anti-grav", "Chaos"],
@@ -123,7 +114,6 @@ export const TRACKS: Track[] = [
     id: "turbo-twist-bayou",
     name: "Turbo Twist Bayou",
     cup: "Shell Cup",
-    tier: "B",
     distanceKm: 2.0,
     laps: 3,
     traits: ["Glider", "Beginner"],
@@ -138,7 +128,6 @@ export const TRACKS: Track[] = [
     id: "dune-drift-raceway",
     name: "Dune Drift Raceway",
     cup: "Lightning Cup",
-    tier: "B",
     distanceKm: 2.2,
     laps: 3,
     traits: ["Technical", "Shortcuts"],
@@ -153,7 +142,6 @@ export const TRACKS: Track[] = [
     id: "frostbite-falls",
     name: "Frostbite Falls",
     cup: "Ice Cup",
-    tier: "B",
     distanceKm: 2.1,
     laps: 3,
     traits: ["Water", "Glider"],
@@ -168,7 +156,6 @@ export const TRACKS: Track[] = [
     id: "rickety-rope-bridge",
     name: "Rickety Rope Bridge",
     cup: "Shell Cup",
-    tier: "C",
     distanceKm: 1.7,
     laps: 3,
     traits: ["Beginner"],
@@ -183,7 +170,6 @@ export const TRACKS: Track[] = [
     id: "boulder-canyon-byway",
     name: "Boulder Canyon Byway",
     cup: "Lightning Cup",
-    tier: "D",
     distanceKm: 2.5,
     laps: 3,
     traits: ["Chaos", "Item-heavy"],
@@ -198,7 +184,6 @@ export const TRACKS: Track[] = [
     id: "foggy-swamp-speedway",
     name: "Foggy Swamp Speedway",
     cup: "Shell Cup",
-    tier: "F",
     distanceKm: 1.8,
     laps: 3,
     traits: ["Beginner", "Water"],
