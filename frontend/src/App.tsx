@@ -1,7 +1,8 @@
 import "./App.css";
+import { Splash } from "./Splash";
 
 function App() {
-  return <div>Hello, Vite!</div>;
+  return <Splash onStart={() => console.log("start")} />;
 }
 
 export default App;

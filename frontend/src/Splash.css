@@ -1,0 +1,72 @@
+/* MK Picker — Splash screen animations & motion-driven bits.
+   Layout lives inline in Splash.tsx (matching the design-system style);
+   only keyframes and the animated elements that need them are here. */
+
+@keyframes mkCheckerScroll {
+  from { background-position: 0 0; }
+  to   { background-position: 48px 0; }
+}
+@keyframes mkBar {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(260%); }
+}
+@keyframes mkBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+@keyframes mkBob2 {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50%      { transform: translateY(-16px) rotate(6deg); }
+}
+@keyframes mkFloatIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Checker finish-line strips */
+.mk-splash-checker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 24px;
+  opacity: 0.9;
+  background-image: conic-gradient(
+    var(--ink-900) 90deg,
+    transparent 90deg 180deg,
+    var(--ink-900) 180deg 270deg,
+    transparent 270deg
+  );
+  background-size: 24px 24px;
+  animation: mkCheckerScroll 2.4s linear infinite;
+}
+.mk-splash-checker--top { top: 0; }
+.mk-splash-checker--bottom { bottom: 0; }
+
+/* Floating item-box accent shapes (ink outline + pop shadow) */
+.mk-splash-shape {
+  position: absolute;
+  border: 3px solid var(--ink-900);
+  box-shadow: var(--shadow-pop-sm);
+}
+
+/* Indeterminate loading fill */
+.mk-splash-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 38%;
+  background: var(--boost-500);
+  border-radius: 999px;
+  animation: mkBar 1.4s var(--ease-in-out) infinite;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .mk-splash-checker,
+  .mk-splash-shape,
+  .mk-splash-bar,
+  .mk-splash-checker--top,
+  .mk-splash-checker--bottom {
+    animation: none !important;
+  }
+}
