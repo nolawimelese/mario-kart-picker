@@ -1,0 +1,67 @@
+/* MK Picker — Base element styles & helpers
+   Element defaults that consume the tokens. Imported by styles.css. */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--text-body);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  color: var(--text-strong);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+h1 { font-size: var(--text-5xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+
+p { margin: 0; }
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+code, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+/* Uppercase eyebrow / kicker — used widely across the brand */
+.mk-eyebrow {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+/* Checkered-flag strip — a brand texture you can drop on any edge */
+.mk-checker {
+  background-image:
+    conic-gradient(var(--ink-900) 90deg, transparent 90deg 180deg, var(--ink-900) 180deg 270deg, transparent 270deg);
+  background-size: 16px 16px;
+  background-position: 0 0;
+}
+
+:focus-visible {
+  outline: var(--ring-width) solid var(--focus-ring);
+  outline-offset: 2px;
+}

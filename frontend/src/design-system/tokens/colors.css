@@ -1,0 +1,89 @@
+/* MK Picker — Color tokens
+   A playful racing-arcade palette: cool "asphalt" inks, warm cream surfaces,
+   and a punchy item-box accent set. Base scales first, semantic aliases below. */
+
+:root {
+  /* ---- Brand ---------------------------------------------------------- */
+  --boost-500: #ff6a1a;   /* primary — speed / boost orange */
+  --boost-600: #ed5605;
+  --boost-400: #ff8a47;
+  --boost-300: #ffb185;
+  --boost-100: #ffe7d6;
+  --boost-50:  #fff4ec;
+
+  --drift-500: #2e7df6;   /* secondary — drift blue */
+  --drift-600: #1763d8;
+  --drift-400: #5e9dff;
+  --drift-300: #9cc1ff;
+  --drift-100: #dbe9ff;
+  --drift-50:  #eef5ff;
+
+  --coin-500:  #ffc42e;   /* highlight — coin yellow */
+  --coin-600:  #f0ac00;
+  --coin-400:  #ffd45e;
+  --coin-100:  #fff1c9;
+
+  /* ---- Item-box accents (category / tier coding) ---------------------- */
+  --shell-red:   #ff3b5c;
+  --mushroom:    #18c964;
+  --star-purple: #8b5cf6;
+  --heart-pink:  #ff5ba8;
+  --boo-cyan:    #18c0e8;
+
+  /* ---- Neutral "asphalt" ramp ----------------------------------------- */
+  --ink-900: #161320;   /* near-black asphalt */
+  --ink-800: #221e30;
+  --ink-700: #322c42;
+  --ink-600: #4a4359;
+  --ink-500: #6b6375;   /* mid grey (carried from source app) */
+  --ink-400: #948ca0;
+  --ink-300: #c8c2d2;
+  --ink-200: #e5e1ec;
+  --ink-100: #f2eff6;
+  --ink-50:  #faf8fc;
+  --white:   #ffffff;
+  --cream:   #fff8ef;   /* warm off-white surface */
+
+  /* ---- Tier scale (S → F) --------------------------------------------- */
+  --tier-s: #ff4d6d;
+  --tier-a: #ff8a3d;
+  --tier-b: #ffc42e;
+  --tier-c: #18c964;
+  --tier-d: #2e7df6;
+  --tier-f: #948ca0;
+
+  /* ---- Semantic aliases ----------------------------------------------- */
+  --color-primary:        var(--boost-500);
+  --color-primary-hover:  var(--boost-600);
+  --color-primary-soft:   var(--boost-100);
+  --color-secondary:      var(--drift-500);
+  --color-secondary-soft: var(--drift-100);
+  --color-accent:         var(--coin-500);
+
+  --color-success: var(--mushroom);
+  --color-warning: #ffb020;
+  --color-danger:  var(--shell-red);
+  --color-info:    var(--drift-500);
+
+  /* Surfaces */
+  --surface-page:    var(--ink-50);
+  --surface-card:    var(--white);
+  --surface-raised:  var(--white);
+  --surface-sunken:  var(--ink-100);
+  --surface-inverse: var(--ink-900);
+  --surface-cream:   var(--cream);
+
+  /* Text */
+  --text-strong:  var(--ink-900);
+  --text-body:    var(--ink-600);
+  --text-muted:   var(--ink-400);
+  --text-inverse: var(--white);
+  --text-on-brand:#ffffff;
+  --text-link:    var(--drift-600);
+
+  /* Borders */
+  --border-subtle: var(--ink-200);
+  --border-strong: var(--ink-300);
+  --border-ink:    var(--ink-900);   /* heavy outline used on arcade cards/buttons */
+  --focus-ring:    var(--drift-500);
+}

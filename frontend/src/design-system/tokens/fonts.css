@@ -1,0 +1,11 @@
+/* MK Picker — Webfonts
+   Loaded from Google Fonts CDN (no binaries shipped). If you need self-hosted
+   files, drop .woff2 into assets/fonts/ and replace these @imports with
+   @font-face rules pointing at them.
+
+   - Lilita One  : chunky arcade display — big headings, scores, the logo wordmark
+   - Fredoka     : rounded friendly UI — buttons, labels, subheads (300–700)
+   - Nunito      : rounded readable body text
+   - Space Mono  : lap-times, stats, numeric/mono contexts
+*/
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&display=swap');

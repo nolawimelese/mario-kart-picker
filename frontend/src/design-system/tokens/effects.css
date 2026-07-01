@@ -1,0 +1,40 @@
+/* MK Picker — Radius, borders, shadows & motion
+   Signature look: chunky rounded corners + a hard "pop" offset shadow that
+   reads like an arcade button. Soft shadows for floating surfaces. */
+
+:root {
+  /* Corner radii — generous & playful */
+  --radius-xs:   6px;
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   20px;
+  --radius-xl:   28px;
+  --radius-pill: 999px;
+
+  /* Border widths */
+  --border-thin:  1px;
+  --border-base:  2px;
+  --border-chunky:3px;   /* arcade outline */
+
+  /* Soft elevation */
+  --shadow-sm: 0 1px 2px rgba(22, 19, 32, 0.06), 0 2px 6px rgba(22, 19, 32, 0.06);
+  --shadow-md: 0 4px 10px rgba(22, 19, 32, 0.08), 0 12px 24px rgba(22, 19, 32, 0.08);
+  --shadow-lg: 0 12px 28px rgba(22, 19, 32, 0.12), 0 28px 60px rgba(22, 19, 32, 0.14);
+
+  /* Hard "pop" shadow — arcade depth. Offset, no blur, ink-colored. */
+  --shadow-pop:    4px 4px 0 var(--ink-900);
+  --shadow-pop-sm: 2px 2px 0 var(--ink-900);
+  --shadow-pop-lg: 6px 6px 0 var(--ink-900);
+  --shadow-pop-boost: 4px 4px 0 var(--boost-600);
+
+  /* Focus */
+  --ring-width: 3px;
+
+  /* Motion — snappy, slightly springy */
+  --ease-snap:   cubic-bezier(0.2, 0.9, 0.3, 1.2); /* @kind other */ /* bouncy press/pop */
+  --ease-out:    cubic-bezier(0.25, 0.8, 0.35, 1); /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast:    120ms; /* @kind other */
+  --dur-base:    200ms; /* @kind other */
+  --dur-slow:    340ms; /* @kind other */
+}
