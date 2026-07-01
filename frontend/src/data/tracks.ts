@@ -18,6 +18,8 @@ export interface Track {
   /** CSS color value for the checkered header banner. */
   headerColor: string;
   stats: TrackStat[];
+  /** Short flavor blurb shown on the track card. */
+  description: string;
 }
 
 /**
@@ -39,6 +41,8 @@ export const TRACKS: Track[] = [
       { label: "Shortcuts", value: 76, color: "var(--boost-500)" },
       { label: "Recovery", value: 70, color: "var(--boost-500)" },
     ],
+    description:
+      "A sun-drenched coastal loop where boost pads chain into gravity-flipped overpasses — hold your line and the whole track rewards you with speed.",
   },
   {
     id: "neon-circuit",
@@ -53,6 +57,8 @@ export const TRACKS: Track[] = [
       { label: "Speed", value: 80, color: "var(--star-purple)" },
       { label: "Shortcuts", value: 58, color: "var(--star-purple)" },
     ],
+    description:
+      "Neon signage and mirrored skyscrapers frame a tight, banked circuit built for drift chains — miss an apex here and you'll feel it.",
   },
   {
     id: "skyline-rush",
@@ -67,6 +73,8 @@ export const TRACKS: Track[] = [
       { label: "Technical", value: 85, color: "var(--drift-500)" },
       { label: "Shortcuts", value: 62, color: "var(--drift-500)" },
     ],
+    description:
+      "Gliders launch you between rooftop gardens high above the clouds, with wind gusts that punish sloppy air control on the way down.",
   },
   {
     id: "coral-cove",
@@ -81,6 +89,8 @@ export const TRACKS: Track[] = [
       { label: "Chaos", value: 78, color: "var(--boo-cyan)" },
       { label: "Speed", value: 64, color: "var(--boo-cyan)" },
     ],
+    description:
+      "A lagoon dotted with item boxes bobbing on lily pads — pure chaos when the pack bunches up at the underwater tunnel entrance.",
   },
   {
     id: "volcano-vault",
@@ -95,6 +105,8 @@ export const TRACKS: Track[] = [
       { label: "Speed", value: 76, color: "var(--shell-red)" },
       { label: "Item luck", value: 72, color: "var(--shell-red)" },
     ],
+    description:
+      "Molten rivers carve through a cracked-open mountain, collapsing bridges forcing last-second anti-grav detours through the lava flow.",
   },
   {
     id: "galaxy-gate",
@@ -109,6 +121,8 @@ export const TRACKS: Track[] = [
       { label: "Technical", value: 78, color: "var(--star-purple)" },
       { label: "Chaos", value: 76, color: "var(--star-purple)" },
     ],
+    description:
+      "A zero-gravity ribbon of track spiraling through an asteroid field, where a single well-timed boost can send you looping past the whole pack.",
   },
   {
     id: "turbo-twist-bayou",
@@ -123,6 +137,8 @@ export const TRACKS: Track[] = [
       { label: "Recovery", value: 65, color: "var(--mushroom)" },
       { label: "Item luck", value: 60, color: "var(--mushroom)" },
     ],
+    description:
+      "A lazy, sun-baked bayou run with wide turns and forgiving guardrails — a friendly first track for karts still learning to drift.",
   },
   {
     id: "dune-drift-raceway",
@@ -137,6 +153,8 @@ export const TRACKS: Track[] = [
       { label: "Speed", value: 72, color: "var(--coin-600)" },
       { label: "Shortcuts", value: 55, color: "var(--coin-600)" },
     ],
+    description:
+      "Sand dunes shift after every lap, opening and burying alternate paths through this desert raceway — no two laps play out the same.",
   },
   {
     id: "frostbite-falls",
@@ -151,6 +169,8 @@ export const TRACKS: Track[] = [
       { label: "Item luck", value: 74, color: "var(--boo-cyan)" },
       { label: "Chaos", value: 58, color: "var(--boo-cyan)" },
     ],
+    description:
+      "Icy switchbacks wind behind a roaring waterfall frozen mid-plunge, with patches of black ice that keep even careful drivers honest.",
   },
   {
     id: "rickety-rope-bridge",
@@ -165,6 +185,8 @@ export const TRACKS: Track[] = [
       { label: "Recovery", value: 80, color: "var(--drift-400)" },
       { label: "Shortcuts", value: 40, color: "var(--drift-400)" },
     ],
+    description:
+      "A creaky wooden bridge sways over a bottomless canyon — slow and nerve-wracking, but forgiving enough that a fall rarely costs the race.",
   },
   {
     id: "boulder-canyon-byway",
@@ -179,6 +201,8 @@ export const TRACKS: Track[] = [
       { label: "Chaos", value: 62, color: "var(--ink-500)" },
       { label: "Item luck", value: 68, color: "var(--ink-500)" },
     ],
+    description:
+      "A rockslide-prone canyon road where boulders tumble across the racing line without warning — expect the unexpected on every straight.",
   },
   {
     id: "foggy-swamp-speedway",
@@ -193,5 +217,7 @@ export const TRACKS: Track[] = [
       { label: "Recovery", value: 45, color: "var(--ink-400)" },
       { label: "Item luck", value: 50, color: "var(--ink-400)" },
     ],
+    description:
+      "Thick fog rolls low over still swamp water, hiding the next turn until you're nearly on top of it — a slow, moody starter track.",
   },
 ];

@@ -1,11 +1,27 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import "./Browse.css";
-import { Badge, Card, IconButton, Input, StatBar, Switch, Tag } from "./design-system";
+import {
+  Badge,
+  Card,
+  IconButton,
+  Input,
+  Switch,
+  Tag,
+} from "./design-system";
 import { TRACKS } from "./data/tracks";
 import type { Track } from "./data/tracks";
 
-const ALL_TRAITS = ["Shortcuts", "Anti-grav", "Glider", "Water", "Item-heavy", "Technical", "Chaos", "Beginner"];
+const ALL_TRAITS = [
+  "Shortcuts",
+  "Anti-grav",
+  "Glider",
+  "Water",
+  "Item-heavy",
+  "Technical",
+  "Chaos",
+  "Beginner",
+];
 
 const eyebrow: CSSProperties = {
   fontFamily: "var(--font-ui)",
@@ -47,13 +63,35 @@ function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
         />
       </div>
 
-      <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 14 }}>
+      <div
+        style={{
+          padding: 20,
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
         <div>
-          <h3 style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", color: "var(--ink-900)", margin: 0 }}>
+          <h3
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "var(--text-xl)",
+              color: "var(--ink-900)",
+              margin: 0,
+            }}
+          >
             {track.name}
           </h3>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-sm)", color: "var(--ink-500)", margin: "4px 0 0" }}>
-            {track.cup} &middot; {track.distanceKm} km &middot; {track.laps} laps
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "var(--text-sm)",
+              color: "var(--ink-500)",
+              margin: "4px 0 0",
+            }}
+          >
+            {track.cup} &middot; {track.distanceKm} km &middot; {track.laps}{" "}
+            laps
           </p>
         </div>
 
@@ -65,11 +103,17 @@ function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
           ))}
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {track.stats.map((stat) => (
-            <StatBar key={stat.label} label={stat.label} value={stat.value} color={stat.color} />
-          ))}
-        </div>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "var(--text-sm)",
+            color: "var(--ink-700)",
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
+          {track.description}
+        </p>
       </div>
     </Card>
   );
@@ -106,14 +150,30 @@ export function Browse() {
     return TRACKS.filter((t) => {
       if (query && !t.name.toLowerCase().includes(query)) return false;
       if (favoritesOnly && !favorites.has(t.id)) return false;
-      for (const trait of selectedTraits) if (!t.traits.includes(trait)) return false;
+      for (const trait of selectedTraits)
+        if (!t.traits.includes(trait)) return false;
       return true;
     });
   }, [search, selectedTraits, favoritesOnly, favorites]);
 
   return (
-    <div style={{ display: "flex", gap: 40, padding: 40, alignItems: "flex-start" }}>
-      <aside style={{ width: 260, flexShrink: 0, display: "flex", flexDirection: "column", gap: 28 }}>
+    <div
+      style={{
+        display: "flex",
+        gap: 40,
+        padding: 40,
+        alignItems: "flex-start",
+      }}
+    >
+      <aside
+        style={{
+          width: 260,
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 28,
+        }}
+      >
         <Input
           icon="search"
           placeholder="Search tracks..."
@@ -125,24 +185,64 @@ export function Browse() {
           <span style={eyebrow}>Track traits</span>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {ALL_TRAITS.map((trait) => (
-              <Tag key={trait} selected={selectedTraits.has(trait)} onClick={() => toggleTrait(trait)}>
+              <Tag
+                key={trait}
+                selected={selectedTraits.has(trait)}
+                onClick={() => toggleTrait(trait)}
+              >
                 {trait}
               </Tag>
             ))}
           </div>
         </div>
 
-        <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: 20 }}>
-          <Switch checked={favoritesOnly} onChange={setFavoritesOnly} label="Favorites only" />
+        <div
+          style={{
+            borderTop: "1px solid var(--border-subtle)",
+            paddingTop: 20,
+          }}
+        >
+          <Switch
+            checked={favoritesOnly}
+            onChange={setFavoritesOnly}
+            label="Favorites only"
+          />
         </div>
       </aside>
 
-      <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 24 }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
-          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-3xl)", color: "var(--ink-900)", margin: 0 }}>
+      <main
+        style={{
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "var(--text-3xl)",
+              color: "var(--ink-900)",
+              margin: 0,
+            }}
+          >
             All tracks
           </h1>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", color: "var(--ink-500)" }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-sm)",
+              color: "var(--ink-500)",
+            }}
+          >
             {tracks.length} tracks
           </span>
         </div>

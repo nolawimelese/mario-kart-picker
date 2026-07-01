@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, Float, String, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 
 class Track(Base):
@@ -7,8 +7,13 @@ class Track(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    image_url = Column(String, index=True)
-    tags = Column(String, index=True)
+    cup = Column(String, index=True)
+    distance_km = Column(Float)
+    laps = Column(Integer)
+    header_color = Column(String)
+    description = Column(String)
+    # Traits shown as tags under the title (also used for filtering).
+    traits = Column(JSON)
     strategies = relationship("Strategy", back_populates="track")
 
 class Strategy(Base):
