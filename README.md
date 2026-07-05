@@ -1,6 +1,6 @@
 # MKPicker
 
-A web app that recommends which track to vote for in Mario Kart World based on your finishing position in the last race and the three tracks up for vote.
+A web app that recommends which track to vote for in Mario Kart 8 Deluxe based on your finishing position in the last race and the three tracks up for vote.
 
 ## How It Works
 
@@ -10,7 +10,7 @@ A web app that recommends which track to vote for in Mario Kart World based on y
 
 ## Tech Stack
 
-**Frontend:** React, TypeScript, Vite
+**Frontend:** React, Vite, TanStack Query
 
 **Backend:** FastAPI, Pydantic, Uvicorn
 
@@ -23,8 +23,9 @@ A web app that recommends which track to vote for in Mario Kart World based on y
 - Develop Components
   - Browse Tab
     - [x] UI
-    - [ ] Seed track table with information contained on each track card
-    - [ ] Remove template cards, link backend so cards contain real information
+    - [x] Seed track table with information contained on each track card
+    - [x] Remove template cards, link backend so cards contain real information
+      - mushroom cup only is in right now, after testing, full list will go in
     - [ ] Add icons for cup, and dlc status
   - Track Picker (flagship feature)
     - [ ] UI

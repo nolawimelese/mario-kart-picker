@@ -16,6 +16,14 @@
   gap: var(--gutter);
 }
 
+.mk-browse-status {
+  margin: 60px auto;
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  color: var(--ink-500);
+  text-align: center;
+}
+
 .mk-browse-traits {
   display: flex;
   flex-wrap: wrap;

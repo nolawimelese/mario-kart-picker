@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, Float, String, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 
 class Track(Base):
@@ -8,7 +8,6 @@ class Track(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     cup = Column(String, index=True)
-    distance_km = Column(Float)
     laps = Column(Integer)
     header_color = Column(String)
     description = Column(String)

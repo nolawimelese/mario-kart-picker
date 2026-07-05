@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties } from "react";
+import { useQuery } from "@tanstack/react-query";
 import "./Browse.css";
 import {
   Badge,
@@ -9,8 +10,8 @@ import {
   Switch,
   Tag,
 } from "./design-system";
-import { TRACKS } from "./data/tracks";
-import type { Track } from "./data/tracks";
+import { fetchTracks } from "./api/tracks";
+import type { Track } from "./api/tracks";
 
 const ALL_TRAITS = [
   "Shortcuts",
@@ -90,8 +91,7 @@ function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
               margin: "4px 0 0",
             }}
           >
-            {track.cup} &middot; {track.distanceKm} km &middot; {track.laps}{" "}
-            laps
+            {track.cup} &middot; {track.laps} laps
           </p>
         </div>
 
@@ -127,7 +127,13 @@ export function Browse() {
   const [search, setSearch] = useState("");
   const [selectedTraits, setSelectedTraits] = useState<Set<string>>(new Set());
   const [favoritesOnly, setFavoritesOnly] = useState(false);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favorites, setFavorites] = useState<Set<number>>(new Set());
+
+  const {
+    data,
+    isPending,
+    isError,
+  } = useQuery({ queryKey: ["tracks"], queryFn: fetchTracks });
 
   function toggleTrait(trait: string) {
     setSelectedTraits((prev) => {
@@ -137,7 +143,7 @@ export function Browse() {
     });
   }
 
-  function toggleFavorite(id: string) {
+  function toggleFavorite(id: number) {
     setFavorites((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
@@ -147,14 +153,14 @@ export function Browse() {
 
   const tracks = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return TRACKS.filter((t) => {
+    return (data ?? []).filter((t) => {
       if (query && !t.name.toLowerCase().includes(query)) return false;
       if (favoritesOnly && !favorites.has(t.id)) return false;
       for (const trait of selectedTraits)
         if (!t.traits.includes(trait)) return false;
       return true;
     });
-  }, [search, selectedTraits, favoritesOnly, favorites]);
+  }, [data, search, selectedTraits, favoritesOnly, favorites]);
 
   return (
     <div
@@ -247,16 +253,24 @@ export function Browse() {
           </span>
         </div>
 
-        <div className="mk-browse-grid">
-          {tracks.map((track) => (
-            <TrackCard
-              key={track.id}
-              track={track}
-              favorited={favorites.has(track.id)}
-              onToggleFavorite={() => toggleFavorite(track.id)}
-            />
-          ))}
-        </div>
+        {isPending ? (
+          <p className="mk-browse-status">Loading tracks…</p>
+        ) : isError ? (
+          <p className="mk-browse-status">
+            Couldn't reach the track server — is the backend running?
+          </p>
+        ) : (
+          <div className="mk-browse-grid">
+            {tracks.map((track) => (
+              <TrackCard
+                key={track.id}
+                track={track}
+                favorited={favorites.has(track.id)}
+                onToggleFavorite={() => toggleFavorite(track.id)}
+              />
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
