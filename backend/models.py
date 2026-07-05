@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON, Boolean
 from sqlalchemy.orm import relationship
 
 class Track(Base):
@@ -13,6 +13,8 @@ class Track(Base):
     description = Column(String)
     # Traits shown as tags under the title (also used for filtering).
     traits = Column(JSON)
+    # True for DLC (Booster Course Pass) tracks — shows a DLC pill on the card.
+    dlc = Column(Boolean, default=False, nullable=False)
     strategies = relationship("Strategy", back_populates="track")
 
 class Strategy(Base):

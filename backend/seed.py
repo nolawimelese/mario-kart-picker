@@ -8,6 +8,7 @@ mushroom_cup_tracks = [
         "id": 1,
         "name": "Mario Kart Stadium",
         "cup": "Mushroom Cup",
+        "dlc": False,
         "laps": 3,
         "header_color": "var(--boost-500)",
         "traits": ["Beginner", "Anti-grav", "Glider"],
@@ -21,6 +22,7 @@ mushroom_cup_tracks = [
         "id": 2,
         "name": "Water Park",
         "cup": "Mushroom Cup",
+        "dlc": False,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
         "traits": ["Beginner", "Water", "Anti-grav"],
@@ -34,6 +36,7 @@ mushroom_cup_tracks = [
         "id": 3,
         "name": "Sweet Sweet Canyon",
         "cup": "Mushroom Cup",
+        "dlc": False,
         "laps": 3,
         "header_color": "var(--star-purple)",
         "traits": ["Glider", "Water", "Shortcuts"],
@@ -47,6 +50,7 @@ mushroom_cup_tracks = [
         "id": 4,
         "name": "Thwomp Ruins",
         "cup": "Mushroom Cup",
+        "dlc": False,
         "laps": 3,
         "header_color": "var(--mushroom)",
         "traits": ["Technical", "Anti-grav", "Water"],
@@ -58,14 +62,75 @@ mushroom_cup_tracks = [
     },
 ]
 
+golden_dash_cup_tracks = [
+    {
+        "id": 5,
+        "name": "Paris Promenade",
+        "cup": "Golden Dash Cup",
+        "dlc": True,
+        "laps": 3,
+        "header_color": "var(--star-purple)",
+        "traits": ["City", "Shortcuts", "Rerouting"],
+        "description": (
+            "A grand tour of Paris that reroutes every lap — cobbled boulevards, "
+            "a dash past the Eiffel Tower, and museum shortcuts that change which "
+            "way the race flows each time around."
+        ),
+    },
+    {
+        "id": 6,
+        "name": "Toad Circuit",
+        "cup": "Golden Dash Cup",
+        "dlc": True,
+        "laps": 3,
+        "header_color": "var(--boost-500)",
+        "traits": ["Beginner", "Sweeping", "Coins"],
+        "description": (
+            "A sunny, Toad-lined speedway of long sweeping curves and coin-dotted "
+            "straights — an easy, flowing circuit perfect for building up a clean "
+            "boost chain."
+        ),
+    },
+    {
+        "id": 7,
+        "name": "Choco Mountain",
+        "cup": "Golden Dash Cup",
+        "dlc": True,
+        "laps": 3,
+        "header_color": "var(--mushroom)",
+        "traits": ["Technical", "Hazards", "Cave"],
+        "description": (
+            "A winding climb through a chocolate mountain where rolling boulders "
+            "tumble down a cave descent — narrow ledges and falling rocks punish "
+            "any sloppy line."
+        ),
+    },
+    {
+        "id": 8,
+        "name": "Coconut Mall",
+        "cup": "Golden Dash Cup",
+        "dlc": True,
+        "laps": 3,
+        "header_color": "var(--boo-cyan)",
+        "traits": ["Technical", "Shortcuts", "Hazards"],
+        "description": (
+            "A bustling shopping mall of escalators, split paths, and roaming "
+            "cars in the parking lot finale — pick the right branch and dodge "
+            "traffic to nail the exit."
+        ),
+    },
+]
+
+all_tracks = mushroom_cup_tracks + golden_dash_cup_tracks
+
 db = SessionLocal()
 
 try:
-    for track_data in mushroom_cup_tracks:
+    for track_data in all_tracks:
         existing = db.query(Track).filter(Track.id == track_data["id"]).first()
         if not existing:
             db.add(Track(**track_data))
     db.commit()
-    print("Mushroom Cup tracks seeded successfully.")
+    print("Mushroom Cup and Golden Dash Cup tracks seeded successfully.")
 finally:
     db.close()

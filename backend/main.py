@@ -30,6 +30,7 @@ class TrackOut(BaseModel):
     header_color: str
     traits: list[str]
     description: str
+    dlc: bool
 
 
 def get_db():

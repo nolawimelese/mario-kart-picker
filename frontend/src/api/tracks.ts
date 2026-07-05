@@ -9,6 +9,8 @@ export interface Track {
   headerColor: string;
   /** Short flavor blurb shown on the track card. */
   description: string;
+  /** True for DLC (Booster Course Pass) tracks — shows a DLC pill on the card. */
+  dlc: boolean;
 }
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
