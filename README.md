@@ -12,7 +12,7 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
 
 **Frontend:** React, Vite, TanStack Query
 
-**Backend:** FastAPI, Pydantic, Uvicorn
+**Backend:** FastAPI, Uvicorn, Pydantic
 
 - REST API with typed request/response validation
 
@@ -26,7 +26,7 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
     - [x] Seed track table with information contained on each track card
     - [x] Remove template cards, link backend so cards contain real information
       - mushroom cup only is in right now, after testing, full list will go in
-    - [ ] Add icons for cup, and dlc status
+    - [x] Add dlc status
   - Track Picker (flagship feature)
     - [ ] UI
     - [ ] Seed strategies table

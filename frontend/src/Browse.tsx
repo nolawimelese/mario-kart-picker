@@ -2,14 +2,7 @@ import { useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import { useQuery } from "@tanstack/react-query";
 import "./Browse.css";
-import {
-  Badge,
-  Card,
-  IconButton,
-  Input,
-  Switch,
-  Tag,
-} from "./design-system";
+import { Badge, Card, Input, Tag } from "./design-system";
 import { fetchTracks } from "./api/tracks";
 import type { Track } from "./api/tracks";
 
@@ -35,11 +28,9 @@ const eyebrow: CSSProperties = {
 
 interface TrackCardProps {
   track: Track;
-  favorited: boolean;
-  onToggleFavorite: () => void;
 }
 
-function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
+function TrackCard({ track }: TrackCardProps) {
   return (
     <Card pop interactive padding={0}>
       <div
@@ -53,15 +44,31 @@ function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
           borderTopRightRadius: "calc(var(--radius-lg) - 2px)",
         }}
       >
-        <IconButton
-          icon="heart"
-          round
-          size="sm"
-          variant={favorited ? "primary" : "outline"}
-          label={favorited ? "Remove favorite" : "Add favorite"}
-          onClick={onToggleFavorite}
-          style={{ position: "absolute", top: 10, right: 12 }}
-        />
+        {track.dlc && (
+          <span
+            title="DLC track"
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 14,
+              display: "flex",
+              alignItems: "center",
+              height: 26,
+              padding: "0 9px",
+              background: "var(--coin-500)",
+              color: "var(--ink-900)",
+              border: "2px solid var(--ink-900)",
+              borderRadius: "var(--radius-pill)",
+              boxShadow: "var(--shadow-pop-sm)",
+              fontFamily: "var(--font-ui)",
+              fontWeight: 700,
+              fontSize: 10,
+              letterSpacing: "0.04em",
+            }}
+          >
+            DLC
+          </span>
+        )}
       </div>
 
       <div
@@ -126,8 +133,6 @@ function TrackCard({ track, favorited, onToggleFavorite }: TrackCardProps) {
 export function Browse() {
   const [search, setSearch] = useState("");
   const [selectedTraits, setSelectedTraits] = useState<Set<string>>(new Set());
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
-  const [favorites, setFavorites] = useState<Set<number>>(new Set());
 
   const {
     data,
@@ -143,24 +148,15 @@ export function Browse() {
     });
   }
 
-  function toggleFavorite(id: number) {
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }
-
   const tracks = useMemo(() => {
     const query = search.trim().toLowerCase();
     return (data ?? []).filter((t) => {
       if (query && !t.name.toLowerCase().includes(query)) return false;
-      if (favoritesOnly && !favorites.has(t.id)) return false;
       for (const trait of selectedTraits)
         if (!t.traits.includes(trait)) return false;
       return true;
     });
-  }, [data, search, selectedTraits, favoritesOnly, favorites]);
+  }, [data, search, selectedTraits]);
 
   return (
     <div
@@ -200,19 +196,6 @@ export function Browse() {
               </Tag>
             ))}
           </div>
-        </div>
-
-        <div
-          style={{
-            borderTop: "1px solid var(--border-subtle)",
-            paddingTop: 20,
-          }}
-        >
-          <Switch
-            checked={favoritesOnly}
-            onChange={setFavoritesOnly}
-            label="Favorites only"
-          />
         </div>
       </aside>
 
@@ -262,12 +245,7 @@ export function Browse() {
         ) : (
           <div className="mk-browse-grid">
             {tracks.map((track) => (
-              <TrackCard
-                key={track.id}
-                track={track}
-                favorited={favorites.has(track.id)}
-                onToggleFavorite={() => toggleFavorite(track.id)}
-              />
+              <TrackCard key={track.id} track={track} />
             ))}
           </div>
         )}
