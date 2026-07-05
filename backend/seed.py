@@ -11,7 +11,7 @@ mushroom_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--boost-500)",
-        "traits": ["Beginner", "Anti-grav", "Glider"],
+        "traits": ["Anti-grav", "Glider"],
         "description": (
             "A roaring stadium circuit built to show off the basics — wide "
             "boost-pad straights, a gentle anti-grav loop, and a glider ramp "
@@ -25,7 +25,7 @@ mushroom_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
-        "traits": ["Beginner", "Water", "Anti-grav"],
+        "traits": ["Water", "Anti-grav"],
         "description": (
             "A seaside amusement park where the track dives underwater past "
             "a sunken carousel — forgiving turns, but the submerged stretch "
@@ -53,7 +53,7 @@ mushroom_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--mushroom)",
-        "traits": ["Technical", "Anti-grav", "Water"],
+        "traits": ["Anti-grav", "Water"],
         "description": (
             "Ancient ruins patrolled by rolling and slamming Thwomps — timing "
             "your line through the crushers and the anti-grav temple interior "
@@ -84,7 +84,7 @@ golden_dash_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--boost-500)",
-        "traits": ["Beginner", "Sweeping", "Coins"],
+        "traits": ["Coins"],
         "description": (
             "A sunny, Toad-lined speedway of long sweeping curves and coin-dotted "
             "straights — an easy, flowing circuit perfect for building up a clean "
@@ -98,7 +98,7 @@ golden_dash_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--mushroom)",
-        "traits": ["Technical", "Hazards", "Cave"],
+        "traits": ["Hazards", "Cave"],
         "description": (
             "A winding climb through a chocolate mountain where rolling boulders "
             "tumble down a cave descent — narrow ledges and falling rocks punish "
@@ -112,7 +112,7 @@ golden_dash_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
-        "traits": ["Technical", "Shortcuts", "Hazards"],
+        "traits": ["Shortcuts", "Hazards"],
         "description": (
             "A bustling shopping mall of escalators, split paths, and roaming "
             "cars in the parking lot finale — pick the right branch and dodge "

@@ -7,14 +7,15 @@ import { fetchTracks } from "./api/tracks";
 import type { Track } from "./api/tracks";
 
 const ALL_TRAITS = [
-  "Shortcuts",
   "Anti-grav",
   "Glider",
   "Water",
-  "Item-heavy",
-  "Technical",
-  "Chaos",
-  "Beginner",
+  "Shortcuts",
+  "Hazards",
+  "Cave",
+  "City",
+  "Coins",
+  "Rerouting",
 ];
 
 const eyebrow: CSSProperties = {
