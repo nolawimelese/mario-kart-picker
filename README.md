@@ -29,7 +29,8 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
     - [x] Add dlc status
   - Track Picker (flagship feature)
     - [ ] UI
-    - [ ] Seed strategies table
+    - [x] Seed strategies table
+      - with demo tracks so far
     - [ ] Develop rule based algo
     - [ ] Pre racing tips & tricks page
   - Kart combo previewer

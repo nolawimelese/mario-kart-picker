@@ -25,4 +25,6 @@ class Strategy(Base):
     name = Column(String, nullable=False)
     position_min = Column(Integer, nullable=False)
     position_max = Column(Integer, nullable=False)
+    # Tips for executing this specific strategy (list of short strings).
+    tips = Column(JSON)
     track = relationship("Track", back_populates="strategies")
