@@ -13,7 +13,7 @@ export interface Track {
   dlc: boolean;
 }
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "/api";
 
 export async function fetchTracks(): Promise<Track[]> {
   const res = await fetch(`${API_URL}/tracks`);
