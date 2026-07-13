@@ -14,7 +14,6 @@ export interface TopNavProps extends Omit<React.HTMLAttributes<HTMLElement>, "on
 const defaultTabs: TabItem[] = [
   { value: "course-picker", label: "Course Picker", icon: "map" },
   { value: "browse", label: "Browse", icon: "search" },
-  { value: "kart-preview", label: "Kart Preview", icon: "gauge" },
 ];
 
 /**

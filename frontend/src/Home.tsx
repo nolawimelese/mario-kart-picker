@@ -4,7 +4,7 @@ import { Browse } from "./Browse";
 
 /**
  * MK Picker home page — TopNav plus the active section's content.
- * Course Picker and Kart Preview are still placeholders; Browse is live.
+ * Course Picker is still a placeholder; Browse is live.
  */
 export function Home() {
   const [tab, setTab] = useState("course-picker");
