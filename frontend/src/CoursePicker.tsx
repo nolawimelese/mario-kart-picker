@@ -183,9 +183,19 @@ export function CoursePicker() {
     const q = search.trim().toLowerCase();
     if (!q) return [];
     const inBallot = new Set(ballot.map((t) => t.id));
-    return (allTracks ?? []).filter(
-      (t) => !inBallot.has(t.id) && t.name.toLowerCase().includes(q),
-    );
+    /* Rank: exact match (0) → prefix (1) → substring (2); alphabetical within a tier. */
+    const rank = (name: string) => {
+      const n = name.toLowerCase();
+      if (n === q) return 0;
+      if (n.startsWith(q)) return 1;
+      return 2;
+    };
+    return (allTracks ?? [])
+      .filter((t) => !inBallot.has(t.id) && t.name.toLowerCase().includes(q))
+      .sort(
+        (a, b) =>
+          rank(a.name) - rank(b.name) || a.name.localeCompare(b.name),
+      );
   }, [allTracks, ballot, search]);
 
   function addTrack(track: Track) {
@@ -453,6 +463,12 @@ export function CoursePicker() {
                     placeholder="Search tracks…"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && searchResults.length > 0) {
+                        e.preventDefault();
+                        addTrack(searchResults[0]);
+                      }
+                    }}
                     disabled={ballotFull}
                   />
                   {searchResults.length > 0 && (
@@ -472,17 +488,22 @@ export function CoursePicker() {
                         overflowY: "auto",
                       }}
                     >
-                      {searchResults.map((t) => (
+                      {searchResults.map((t, i) => {
+                        const isTop = i === 0;
+                        const rest = isTop
+                          ? "var(--ink-100)"
+                          : "transparent";
+                        return (
                         <button
                           key={t.id}
                           type="button"
                           onClick={() => addTrack(t)}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.background =
-                              "var(--ink-100)")
+                              "var(--ink-200)")
                           }
                           onMouseLeave={(e) =>
-                            (e.currentTarget.style.background = "transparent")
+                            (e.currentTarget.style.background = rest)
                           }
                           style={{
                             display: "flex",
@@ -490,7 +511,7 @@ export function CoursePicker() {
                             alignItems: "center",
                             gap: 12,
                             padding: "12px 16px",
-                            background: "transparent",
+                            background: rest,
                             border: "none",
                             borderBottom: "1px solid var(--border-subtle)",
                             cursor: "pointer",
@@ -542,7 +563,8 @@ export function CoursePicker() {
                             color="var(--boost-500)"
                           />
                         </button>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>

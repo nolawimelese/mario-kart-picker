@@ -8,7 +8,7 @@ import { CoursePicker } from "./CoursePicker";
  * Course Picker and Browse are live.
  */
 export function Home() {
-  const [tab, setTab] = useState("course-picker");
+  const [tab, setTab] = useState("browse");
 
   return (
     <div
