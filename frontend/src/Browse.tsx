@@ -104,6 +104,9 @@ function TrackCard({ track }: TrackCardProps) {
         </div>
 
         <div className="mk-browse-traits">
+          <Badge color="drift" soft dot>
+            {track.terrain}
+          </Badge>
           {track.traits.map((trait) => (
             <Badge key={trait} color="neutral" soft>
               {trait}
@@ -134,6 +137,9 @@ function TrackCard({ track }: TrackCardProps) {
 export function Browse() {
   const [search, setSearch] = useState("");
   const [selectedTraits, setSelectedTraits] = useState<Set<string>>(new Set());
+  const [selectedTerrains, setSelectedTerrains] = useState<Set<string>>(
+    new Set()
+  );
 
   const {
     data,
@@ -149,15 +155,31 @@ export function Browse() {
     });
   }
 
+  function toggleTerrain(terrain: string) {
+    setSelectedTerrains((prev) => {
+      const next = new Set(prev);
+      next.has(terrain) ? next.delete(terrain) : next.add(terrain);
+      return next;
+    });
+  }
+
+  // Terrain filter options are the distinct classifications present in the
+  // catalog, so the sidebar auto-populates as sandy/icy tracks get added.
+  const terrainOptions = useMemo(() => {
+    return [...new Set((data ?? []).map((t) => t.terrain))].sort();
+  }, [data]);
+
   const tracks = useMemo(() => {
     const query = search.trim().toLowerCase();
     return (data ?? []).filter((t) => {
       if (query && !t.name.toLowerCase().includes(query)) return false;
       for (const trait of selectedTraits)
         if (!t.traits.includes(trait)) return false;
+      if (selectedTerrains.size > 0 && !selectedTerrains.has(t.terrain))
+        return false;
       return true;
     });
-  }, [data, search, selectedTraits]);
+  }, [data, search, selectedTraits, selectedTerrains]);
 
   return (
     <div
@@ -183,6 +205,21 @@ export function Browse() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <span style={eyebrow}>Terrain</span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {terrainOptions.map((terrain) => (
+              <Tag
+                key={terrain}
+                selected={selectedTerrains.has(terrain)}
+                onClick={() => toggleTerrain(terrain)}
+              >
+                {terrain}
+              </Tag>
+            ))}
+          </div>
+        </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <span style={eyebrow}>Track traits</span>

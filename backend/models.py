@@ -11,6 +11,11 @@ class Track(Base):
     laps = Column(Integer)
     header_color = Column(String)
     description = Column(String)
+    # Slippery off-road classification from the MK8DX in-game statistics:
+    # None - (no traction-reducing surface)
+    # Light/Medium/Heavy Sand/Ice grade.
+    # Display only for now, will feed the recommender once kart-combo traction stats are added
+    terrain = Column(String)
     # Traits shown as tags under the title (also used for filtering).
     traits = Column(JSON)
     # True for DLC (Booster Course Pass) tracks — shows a DLC pill on the card.

@@ -29,6 +29,7 @@ class TrackOut(BaseModel):
     cup: str
     laps: int
     header_color: str
+    terrain: str
     traits: list[str]
     description: str
     dlc: bool

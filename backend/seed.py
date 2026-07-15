@@ -11,6 +11,7 @@ mushroom_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--boost-500)",
+        "terrain": "None",
         "traits": ["Anti-grav", "Glider"],
         "description": (
             "A roaring stadium circuit built to show off the basics — wide "
@@ -25,6 +26,7 @@ mushroom_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
+        "terrain": "None",
         "traits": ["Water", "Anti-grav"],
         "description": (
             "A seaside amusement park where the track dives underwater past "
@@ -39,6 +41,7 @@ mushroom_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--star-purple)",
+        "terrain": "None",
         "traits": ["Glider", "Water", "Shortcuts"],
         "description": (
             "A candy-coated canyon of donut tunnels and soda lakes, with a "
@@ -53,6 +56,7 @@ mushroom_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--mushroom)",
+        "terrain": "None",
         "traits": ["Anti-grav", "Water"],
         "description": (
             "Ancient ruins patrolled by rolling and slamming Thwomps — timing "
@@ -70,6 +74,7 @@ golden_dash_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--star-purple)",
+        "terrain": "None",
         "traits": ["City", "Shortcuts", "Rerouting"],
         "description": (
             "A grand tour of Paris that reroutes every lap — cobbled boulevards, "
@@ -84,6 +89,7 @@ golden_dash_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--boost-500)",
+        "terrain": "None",
         "traits": ["Coins"],
         "description": (
             "A sunny, Toad-lined speedway of long sweeping curves and coin-dotted "
@@ -98,6 +104,7 @@ golden_dash_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--mushroom)",
+        "terrain": "None",
         "traits": ["Hazards", "Cave"],
         "description": (
             "A winding climb through a chocolate mountain where rolling boulders "
@@ -112,6 +119,7 @@ golden_dash_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
+        "terrain": "None",
         "traits": ["Shortcuts", "Hazards"],
         "description": (
             "A bustling shopping mall of escalators, split paths, and roaming "
