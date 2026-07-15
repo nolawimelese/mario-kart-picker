@@ -33,5 +33,7 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
       - with demo tracks so far
     - [x] Develop rule based algo
     - [ ] Pre racing tips & tricks page
-  - Kart combo previewer
-    - TBD
+    - Kart combo previewer
+      - Design: [Track surface classification & the kart-kombo bridge](docs/surface-traits-design.md)
+      - [ ] add kart section to questionnaire
+      - [ ] add weighing in scoring formula based off of whether track traits complement kart stats
