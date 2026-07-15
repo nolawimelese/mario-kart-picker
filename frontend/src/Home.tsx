@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { TopNav } from "./design-system";
 import { Browse } from "./Browse";
+import { CoursePicker } from "./CoursePicker";
 
 /**
  * MK Picker home page — TopNav plus the active section's content.
- * Course Picker is still a placeholder; Browse is live.
+ * Course Picker and Browse are live.
  */
 export function Home() {
   const [tab, setTab] = useState("course-picker");
@@ -20,7 +21,9 @@ export function Home() {
       }}
     >
       <TopNav value={tab} onChange={setTab} />
-      {tab === "browse" ? (
+      {tab === "course-picker" ? (
+        <CoursePicker />
+      ) : tab === "browse" ? (
         <Browse />
       ) : (
         <main

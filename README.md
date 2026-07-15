@@ -28,10 +28,10 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
       - mushroom cup only is in right now, after testing, full list will go in
     - [x] Add dlc status
   - Track Picker (flagship feature)
-    - [ ] UI
+    - [x] UI
     - [x] Seed strategies table
       - with demo tracks so far
-    - [ ] Develop rule based algo
+    - [x] Develop rule based algo
     - [ ] Pre racing tips & tricks page
   - Kart combo previewer
     - TBD
