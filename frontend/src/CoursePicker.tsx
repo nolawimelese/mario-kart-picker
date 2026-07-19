@@ -19,7 +19,7 @@ function ordinal(n: number): string {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-/** Backend score is ~0–1 (can dip below 0 / above 1); show a friendly 0–100. */
+/** Backend score is normalized to 0–1; show it as a 0–100 pick score. */
 function pickScore(score: number): number {
   return Math.max(0, Math.min(100, Math.round(score * 100)));
 }

@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL ?? "/api";
 export interface Recommendation {
   trackId: number;
   name: string;
-  /** Raw recommender score (~0–1, can slightly exceed 1). */
+  /** Recommender score, normalized to [0, 1]. */
   score: number;
   /** Short, actionable tips tied to the best-fit strategy (empty if the track has none). */
   strategyTips: string[];

@@ -29,6 +29,15 @@ TRAIT_LEAN = {
     "Coins": -0.5,
 }
 
+# Strongest possible per-track net lean: every same-signed trait stacked together.
+_MAX_NET_LEAN = max(
+    sum(w for w in TRAIT_LEAN.values() if w > 0),
+    -sum(w for w in TRAIT_LEAN.values() if w < 0),
+)
+# Highest raw score: perfect band fit plus the strongest possible trait bonus
+# (|back_bias - 0.5| maxes out at 0.5). Used to normalize scores into [0, 1].
+MAX_RAW_SCORE = 1.0 + TRAIT_BONUS_WEIGHT * 0.5 * _MAX_NET_LEAN
+
 
 @dataclass
 class ScoreResult:
@@ -83,7 +92,8 @@ def score_track(track, position):
     best = max(strategies, key=lambda s: band_fit(position, s))
     base = band_fit(position, best)
     adjust = trait_adjust(track, position)
-    score = base + TRAIT_BONUS_WEIGHT * adjust
+    raw = base + TRAIT_BONUS_WEIGHT * adjust
+    score = max(0.0, raw) / MAX_RAW_SCORE
 
     reason = (
         f"Suits starts from P{best.position_min}-P{best.position_max} "
