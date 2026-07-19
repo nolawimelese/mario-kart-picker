@@ -6,9 +6,7 @@ export interface Recommendation {
   name: string;
   /** Raw recommender score (~0–1, can slightly exceed 1). */
   score: number;
-  /** Best-fit strategy for the given grid position (null if the track has none). */
-  strategyName: string | null;
-  /** Short, actionable tips tied to the chosen strategy. */
+  /** Short, actionable tips tied to the best-fit strategy (empty if the track has none). */
   strategyTips: string[];
   /** Human-readable explanation of why this track scored where it did. */
   reason: string;

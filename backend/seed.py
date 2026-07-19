@@ -137,7 +137,7 @@ all_tracks = mushroom_cup_tracks + golden_dash_cup_tracks
 strategies = [
     # Mario Kart Stadium — clean, low-chaos: reward a controlled lead.
     {
-        "track_id": 1, "name": "Wire-to-wire", "position_min": 1, "position_max": 4,
+        "track_id": 1, "position_min": 1, "position_max": 4,
         "tips": [
             "Hold the inside line through the anti-grav loop to deny passing room.",
             "Save a coin buffer for top speed on the boost-pad straights.",
@@ -146,7 +146,7 @@ strategies = [
     },
     # Water Park — forgiving, slight edge to steady mid-pack driving.
     {
-        "track_id": 2, "name": "Hold your line", "position_min": 3, "position_max": 8,
+        "track_id": 2, "position_min": 3, "position_max": 8,
         "tips": [
             "Draft the kart ahead down the main straight before committing to a pass.",
             "Drift the submerged section early — underwater steering is sluggish.",
@@ -155,7 +155,7 @@ strategies = [
     },
     # Sweet Sweet Canyon — shortcuts reward a bold comeback from the back.
     {
-        "track_id": 3, "name": "Chase the shortcut", "position_min": 7, "position_max": 12,
+        "track_id": 3, "position_min": 7, "position_max": 12,
         "tips": [
             "Break the chocolate wall shortcut every lap — it's worth the risk from the back.",
             "Carry a mushroom to cut the soda-lake corner.",
@@ -164,7 +164,7 @@ strategies = [
     },
     # Thwomp Ruins — bimodal: defend up front, or gamble on the crushers from the back.
     {
-        "track_id": 4, "name": "Defend the temple", "position_min": 1, "position_max": 3,
+        "track_id": 4, "position_min": 1, "position_max": 3,
         "tips": [
             "Take the crushers on the safe, predictable timing — don't gamble with a lead.",
             "Hold a trailing shell or banana to block the temple entrance.",
@@ -172,7 +172,7 @@ strategies = [
         ],
     },
     {
-        "track_id": 4, "name": "Crusher gamble", "position_min": 8, "position_max": 12,
+        "track_id": 4, "position_min": 8, "position_max": 12,
         "tips": [
             "Dive the tight Thwomp gaps the leaders won't risk — that's where you gain.",
             "Time entry so a crusher rises just as you reach it.",
@@ -181,7 +181,7 @@ strategies = [
     },
     # Paris Promenade — rerouting + shortcuts: strong catch-up track.
     {
-        "track_id": 5, "name": "Reroute ambush", "position_min": 6, "position_max": 12,
+        "track_id": 5, "position_min": 6, "position_max": 12,
         "tips": [
             "Learn which way the track reroutes each lap — the layout flips.",
             "Cut the museum shortcut when the boulevard section is open.",
@@ -190,7 +190,7 @@ strategies = [
     },
     # Toad Circuit — flowing, coin-heavy: build a clean boost chain from the front.
     {
-        "track_id": 6, "name": "Boost chain", "position_min": 1, "position_max": 5,
+        "track_id": 6, "position_min": 1, "position_max": 5,
         "tips": [
             "Grab every coin — max coins means max top speed on the long curves.",
             "Chain drifts through the sweepers for uninterrupted mini-turbos.",
@@ -199,7 +199,7 @@ strategies = [
     },
     # Choco Mountain — hazards punish, but reward daring lines from behind.
     {
-        "track_id": 7, "name": "Thread the boulders", "position_min": 6, "position_max": 12,
+        "track_id": 7, "position_min": 6, "position_max": 12,
         "tips": [
             "Weave the rolling boulders on the cave descent for time the leaders won't take.",
             "Hug the inside of the narrow ledges to shorten the climb.",
@@ -208,7 +208,7 @@ strategies = [
     },
     # Coconut Mall — bimodal: split paths let leaders extend or the pack pounce.
     {
-        "track_id": 8, "name": "Own the escalators", "position_min": 1, "position_max": 4,
+        "track_id": 8, "position_min": 1, "position_max": 4,
         "tips": [
             "Pick the escalator branch moving in your direction for free speed.",
             "Memorize the parking-lot car pattern to protect your lead at the finish.",
@@ -216,7 +216,7 @@ strategies = [
         ],
     },
     {
-        "track_id": 8, "name": "Branch and pounce", "position_min": 7, "position_max": 12,
+        "track_id": 8, "position_min": 7, "position_max": 12,
         "tips": [
             "Take the opposite branch from the pack to find open track.",
             "Use the escalators' speed boost to close gaps between sections.",
@@ -239,7 +239,8 @@ try:
             db.query(Strategy)
             .filter(
                 Strategy.track_id == strat["track_id"],
-                Strategy.name == strat["name"],
+                Strategy.position_min == strat["position_min"],
+                Strategy.position_max == strat["position_max"],
             )
             .first()
         )

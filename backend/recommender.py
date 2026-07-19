@@ -33,7 +33,6 @@ TRAIT_LEAN = {
 @dataclass
 class ScoreResult:
     score: float
-    strategy_name: str | None
     strategy_tips: list[str]
     base: float
     adjust: float
@@ -75,7 +74,6 @@ def score_track(track, position):
     if not strategies:
         return ScoreResult(
             score=0.0,
-            strategy_name=None,
             strategy_tips=[],
             base=0.0,
             adjust=0.0,
@@ -87,7 +85,10 @@ def score_track(track, position):
     adjust = trait_adjust(track, position)
     score = base + TRAIT_BONUS_WEIGHT * adjust
 
-    reason = f'Play "{best.name}" (best fit for grid position {position}).'
+    reason = (
+        f"Suits starts from P{best.position_min}-P{best.position_max} "
+        f"(you're on P{position})."
+    )
     dominant = _dominant_traits(track)
     if dominant and adjust:
         direction = "back-of-grid" if adjust > 0 else "front-running"
@@ -95,7 +96,6 @@ def score_track(track, position):
 
     return ScoreResult(
         score=score,
-        strategy_name=best.name,
         strategy_tips=best.tips or [],
         base=base,
         adjust=adjust,

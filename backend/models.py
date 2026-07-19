@@ -27,7 +27,6 @@ class Strategy(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     track_id = Column(Integer, ForeignKey("tracks.id"), nullable=False)
-    name = Column(String, nullable=False)
     position_min = Column(Integer, nullable=False)
     position_max = Column(Integer, nullable=False)
     # Tips for executing this specific strategy (list of short strings).

@@ -48,7 +48,6 @@ class RecommendationOut(BaseModel):
     track_id: int
     name: str
     score: float
-    strategy_name: str | None
     strategy_tips: list[str]
     reason: str
     recommended: bool
@@ -94,7 +93,6 @@ def recommend(req: RecommendRequest, db: Session = Depends(get_db)):
             track_id=track.id,
             name=track.name,
             score=round(result.score, 4),
-            strategy_name=result.strategy_name,
             strategy_tips=result.strategy_tips,
             reason=result.reason,
             recommended=(i == 0),

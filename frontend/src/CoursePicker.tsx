@@ -980,8 +980,8 @@ export function CoursePicker() {
                   </p>
                 </div>
 
-                {/* Strategy + tips */}
-                {top.rec.strategyName && (
+                {/* Strategy tips */}
+                {top.rec.strategyTips.length > 0 && (
                   <div
                     style={{
                       display: "flex",
@@ -1000,7 +1000,7 @@ export function CoursePicker() {
                           color: "var(--ink-900)",
                         }}
                       >
-                        {top.rec.strategyName}
+                        How to play it
                       </span>
                     </div>
                     <ul
