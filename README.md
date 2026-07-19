@@ -27,13 +27,12 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
     - [x] Remove template cards, link backend so cards contain real information
       - mushroom cup only is in right now, after testing, full list will go in
     - [x] Add dlc status
+    - [ ] Seed the remaining tracks
+      - also fills out the terrain filter, which is all "None" until then
   - Track Picker (flagship feature)
     - [x] UI
     - [x] Seed strategies table
       - with demo tracks so far
     - [x] Develop rule based algo
+      - [x] weigh in track traits to break ties
     - [ ] Pre racing tips & tricks page
-    - Kart combo previewer
-      - Design: [Track surface classification & the kart-kombo bridge](docs/surface-traits-design.md)
-      - [ ] add kart section to questionnaire
-      - [ ] add weighing in scoring formula based off of whether track traits complement kart stats

@@ -14,7 +14,6 @@ class Track(Base):
     # Slippery off-road classification from the MK8DX in-game statistics:
     # None - (no traction-reducing surface)
     # Light/Medium/Heavy Sand/Ice grade.
-    # Display only for now, will feed the recommender once kart-combo traction stats are added
     terrain = Column(String)
     # Traits shown as tags under the title (also used for filtering).
     traits = Column(JSON)

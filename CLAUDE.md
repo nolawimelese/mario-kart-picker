@@ -1,16 +1,21 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project
 
 MKPicker recommends which track to vote for in Mario Kart 8 Deluxe based on your finishing
 position in the last race and the three tracks up for vote. The flagship feature is the Track
 Picker (rule-based recommender); a Browse tab lists tracks. See `README.md` for the roadmap.
 
+## Workflow
+
+Always consult Context7 for a package's docs before implementing against it, at the version this
+repo pins — backend versions in `backend/requirements.txt`, frontend versions in
+`frontend/package.json`.
+
 ## Commands
 
 ### Backend (`backend/`, FastAPI + SQLAlchemy + SQLite)
+
 ```bash
 cd backend
 pip install -r requirements.txt
@@ -19,6 +24,7 @@ uvicorn main:app --reload   # serves on http://localhost:8000
 ```
 
 ### Frontend (`frontend/`, React 19 + Vite + TanStack Query)
+
 ```bash
 cd frontend
 npm install
@@ -42,6 +48,7 @@ already exist).
 
 **The recommender (`recommender.py`)** is the heart of the app. A track's score = a graded
 position-band fit plus a small trait adjustment:
+
 - Each `Strategy` targets a starting-grid band `[position_min, position_max]` on a fixed 12-kart
   grid (`FIELD_SIZE = 12`, 1 = pole). `band_fit` returns 1.0 inside the band and decays linearly
   to 0 over `FALLOFF` positions outside it. A track can have multiple strategies (e.g. a front
@@ -49,6 +56,8 @@ position-band fit plus a small trait adjustment:
 - `trait_adjust` nudges the score using `TRAIT_LEAN` (per-trait bias in [-1, +1]: negative favors
   the front, positive favors the back), weighted by `TRAIT_BONUS_WEIGHT` so traits break ties but
   never override band fit. Tuning the recommender means editing these constants and the seed data.
+- The raw score is normalized by `MAX_RAW_SCORE` (best band fit + strongest possible trait bonus)
+  so scores land in [0, 1]; the frontend renders them as a 0–100 pick score.
 
 **Data model:** `Track` (name, cup, laps, header_color, `traits` as JSON, `dlc`) has a one-to-many
 `strategies` relationship to `Strategy` (position band, `tips` as JSON). Traits double as
@@ -61,8 +70,9 @@ in `seed.py`.
 with backend `TrackOut`.
 
 **Frontend structure:** `App.tsx` toggles between a `Splash` screen and `Home`. `Home` renders
-`TopNav` plus the active tab — `Browse` is live; the Course Picker (Track Picker UI) is still a
-placeholder. API calls go through `frontend/src/api/tracks.ts`. The dev server proxies `/api/*` to
+`TopNav` plus the active tab — `Browse` (track catalog with search/filters) and `CoursePicker`
+(the Track Picker UI) are both live. API calls go through `frontend/src/api/` (`tracks.ts` for
+`GET /tracks`, `recommend.ts` for `POST /recommend`). The dev server proxies `/api/*` to
 `http://localhost:8000` (see `vite.config.ts`), stripping the `/api` prefix; `VITE_API_URL`
 overrides the base. CORS on the backend only allows `http://localhost:5173`.
 
