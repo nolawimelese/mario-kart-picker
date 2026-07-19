@@ -51,7 +51,7 @@ position-band fit plus a small trait adjustment:
   never override band fit. Tuning the recommender means editing these constants and the seed data.
 
 **Data model:** `Track` (name, cup, laps, header_color, `traits` as JSON, `dlc`) has a one-to-many
-`strategies` relationship to `Strategy` (name, position band, `tips` as JSON). Traits double as
+`strategies` relationship to `Strategy` (position band, `tips` as JSON). Traits double as
 both display chips and recommender inputs, so the `TRAIT_LEAN` keys must match trait strings used
 in `seed.py`.
 
