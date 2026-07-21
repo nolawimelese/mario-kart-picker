@@ -35,4 +35,4 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
       - with demo tracks so far
     - [x] Develop rule based algo
       - [x] weigh in track traits to break ties
-    - [ ] Pre racing tips & tricks page
+    - [x] Pre racing tips & tricks page
