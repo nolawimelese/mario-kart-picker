@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import "./CoursePicker.css";
-import { Badge, Button, Card, Icon, IconButton, Input } from "./design-system";
+import { Badge, Button, Card, Dialog, Icon, IconButton, Input } from "./design-system";
 import { fetchTracks } from "./api/tracks";
 import type { Track } from "./api/tracks";
 import { fetchRecommendation } from "./api/recommend";
@@ -135,7 +135,7 @@ const DECOR: Decor[] = [
   },
 ];
 
-type Phase = "input" | "loading" | "result";
+type Phase = "input" | "loading" | "ranked" | "tips";
 
 /**
  * Course Picker — the flagship. Tell us where you finished and which three
@@ -148,6 +148,10 @@ export function CoursePicker() {
   const [search, setSearch] = useState("");
   const [phase, setPhase] = useState<Phase>("input");
   const [results, setResults] = useState<Recommendation[]>([]);
+  /** Which of the 3 tracks actually won the lobby vote (null until logged). */
+  const [winnerId, setWinnerId] = useState<number | null>(null);
+  /** Whether the "which track won?" pop-up is open. */
+  const [pickOpen, setPickOpen] = useState(false);
   const spinStart = useRef(0);
   const spinTimer = useRef<number | undefined>(undefined);
 
@@ -164,13 +168,16 @@ export function CoursePicker() {
       ),
     onMutate: () => {
       spinStart.current = Date.now();
+      /* A fresh spin invalidates any previously-logged winner. */
+      setWinnerId(null);
+      setPickOpen(false);
       setPhase("loading");
     },
     onSuccess: (data) => {
       const wait = Math.max(0, MIN_SPIN_MS - (Date.now() - spinStart.current));
       spinTimer.current = window.setTimeout(() => {
         setResults(data);
-        setPhase("result");
+        setPhase("ranked");
       }, wait);
     },
     onError: () => setPhase("input"),
@@ -213,7 +220,15 @@ export function CoursePicker() {
     setBallot([]);
     setSearch("");
     setResults([]);
+    setWinnerId(null);
+    setPickOpen(false);
     setPhase("input");
+  }
+  /** Log the track that actually won the vote and reveal its tips. */
+  function chooseWinner(id: number) {
+    setWinnerId(id);
+    setPickOpen(false);
+    setPhase("tips");
   }
 
   const ballotNames = ballot.map((t) => t.name).join(", ");
@@ -232,6 +247,11 @@ export function CoursePicker() {
   );
   const top = ranked[0];
   const runners = ranked.slice(1);
+
+  /* The track the player logged as the vote winner, and its rank in the ballot
+     (0 = our top pick). winnerRank > 0 means the vote didn't go their way. */
+  const winnerRank = ranked.findIndex((r) => r.rec.trackId === winnerId);
+  const winner = winnerRank >= 0 ? ranked[winnerRank] : undefined;
 
   return (
     <div
@@ -798,8 +818,8 @@ export function CoursePicker() {
           </Card>
         )}
 
-        {/* ============ RESULT ============ */}
-        {phase === "result" && top && (
+        {/* ============ RANKED (how to vote) ============ */}
+        {phase === "ranked" && top && (
           <div
             className="mk-course-pop"
             style={{
@@ -979,70 +999,6 @@ export function CoursePicker() {
                     {top.rec.reason}
                   </p>
                 </div>
-
-                {/* Strategy tips */}
-                {top.rec.strategyTips.length > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 10,
-                    }}
-                  >
-                    <div
-                      style={{ display: "flex", alignItems: "center", gap: 8 }}
-                    >
-                      <Icon name="route" size={18} color="var(--drift-500)" />
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "var(--text-lg)",
-                          color: "var(--ink-900)",
-                        }}
-                      >
-                        How to play it
-                      </span>
-                    </div>
-                    <ul
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 8,
-                        margin: 0,
-                        paddingLeft: 0,
-                        listStyle: "none",
-                      }}
-                    >
-                      {top.rec.strategyTips.map((tip, i) => (
-                        <li
-                          key={i}
-                          style={{
-                            display: "flex",
-                            gap: 10,
-                            alignItems: "flex-start",
-                          }}
-                        >
-                          <Icon
-                            name="check"
-                            size={16}
-                            color="var(--mushroom)"
-                            style={{ flexShrink: 0, marginTop: 3 }}
-                          />
-                          <span
-                            style={{
-                              fontFamily: "var(--font-body)",
-                              fontSize: "var(--text-sm)",
-                              color: "var(--ink-700)",
-                              lineHeight: 1.5,
-                            }}
-                          >
-                            {tip}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
             </Card>
 
@@ -1139,6 +1095,14 @@ export function CoursePicker() {
               }}
             >
               <Button
+                variant="primary"
+                size="lg"
+                iconRight="trophy"
+                onClick={() => setPickOpen(true)}
+              >
+                Which track won?
+              </Button>
+              <Button
                 variant="outline"
                 size="md"
                 iconLeft="shuffle"
@@ -1152,6 +1116,391 @@ export function CoursePicker() {
             </div>
           </div>
         )}
+
+        {/* ============ TIPS (how to play what won) ============ */}
+        {phase === "tips" && winner && (
+          <div
+            className="mk-course-pop"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              animation: "mkpop 0.34s var(--ease-snap)",
+            }}
+          >
+            {/* Off-pick acknowledgement */}
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                alignItems: "center",
+                padding: "14px 18px",
+                background:
+                  winnerRank === 0 ? "var(--boost-50)" : "var(--coin-100)",
+                border: "var(--border-base) solid var(--ink-900)",
+                borderRadius: "var(--radius-md)",
+                boxShadow: "var(--shadow-pop-sm)",
+              }}
+            >
+              <Icon
+                name={winnerRank === 0 ? "trophy" : "flag"}
+                size={22}
+                color={winnerRank === 0 ? "var(--boost-500)" : "var(--coin-600)"}
+                style={{ flexShrink: 0 }}
+              />
+              <span
+                style={{
+                  fontFamily: "var(--font-ui)",
+                  fontWeight: 600,
+                  fontSize: "var(--text-md)",
+                  color: "var(--ink-800)",
+                  lineHeight: 1.4,
+                }}
+              >
+                {winnerRank === 0 ? (
+                  <>
+                    The vote went your way — <strong>{winner.track.name}</strong>{" "}
+                    was our top pick. Here's how to play it.
+                  </>
+                ) : (
+                  <>
+                    Vote went to <strong>{winner.track.name}</strong> (your #
+                    {winnerRank + 1}). Here's how to make the best of it.
+                  </>
+                )}
+              </span>
+            </div>
+
+            {/* Selected track */}
+            <Card pop padding={0}>
+              <div
+                style={{
+                  position: "relative",
+                  height: 96,
+                  background: winner.track.headerColor,
+                  borderBottom: "var(--border-base) solid var(--ink-900)",
+                  borderTopLeftRadius: "calc(var(--radius-lg) - 2px)",
+                  borderTopRightRadius: "calc(var(--radius-lg) - 2px)",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 24px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "8px 14px",
+                    background: "var(--ink-900)",
+                    borderRadius: "var(--radius-pill)",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: "var(--mushroom)",
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "var(--font-ui)",
+                      fontWeight: 700,
+                      fontSize: "var(--text-xs)",
+                      letterSpacing: "var(--tracking-caps)",
+                      textTransform: "uppercase",
+                      color: "var(--white)",
+                    }}
+                  >
+                    Now racing
+                  </span>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: 28,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 22,
+                }}
+              >
+                <div
+                  style={{ display: "flex", alignItems: "flex-start", gap: 18 }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h2
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "var(--text-3xl)",
+                        color: "var(--ink-900)",
+                        lineHeight: 1.05,
+                        margin: 0,
+                      }}
+                    >
+                      {winner.track.name}
+                    </h2>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: "var(--text-sm)",
+                        color: "var(--ink-500)",
+                        margin: "4px 0 0",
+                      }}
+                    >
+                      {winner.track.cup} · {winner.track.laps} laps
+                    </p>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "var(--text-4xl)",
+                        fontWeight: 700,
+                        color: "var(--ink-900)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {pickScore(winner.rec.score)}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-ui)",
+                        fontSize: "var(--text-2xs)",
+                        letterSpacing: "var(--tracking-caps)",
+                        textTransform: "uppercase",
+                        color: "var(--ink-400)",
+                      }}
+                    >
+                      Pick score
+                    </div>
+                  </div>
+                </div>
+
+                {winner.track.traits.length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {winner.track.traits.map((tr) => (
+                      <Badge key={tr} color="neutral" soft>
+                        {tr}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                {/* Strategy tips */}
+                {winner.rec.strategyTips.length > 0 ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 10,
+                    }}
+                  >
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 8 }}
+                    >
+                      <Icon name="route" size={18} color="var(--drift-500)" />
+                      <span
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: "var(--text-lg)",
+                          color: "var(--ink-900)",
+                        }}
+                      >
+                        How to play it
+                      </span>
+                    </div>
+                    <ul
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 8,
+                        margin: 0,
+                        paddingLeft: 0,
+                        listStyle: "none",
+                      }}
+                    >
+                      {winner.rec.strategyTips.map((tip, i) => (
+                        <li
+                          key={i}
+                          style={{
+                            display: "flex",
+                            gap: 10,
+                            alignItems: "flex-start",
+                          }}
+                        >
+                          <Icon
+                            name="check"
+                            size={16}
+                            color="var(--mushroom)"
+                            style={{ flexShrink: 0, marginTop: 3 }}
+                          />
+                          <span
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: "var(--text-sm)",
+                              color: "var(--ink-700)",
+                              lineHeight: 1.5,
+                            }}
+                          >
+                            {tip}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-sm)",
+                      color: "var(--ink-500)",
+                      margin: 0,
+                    }}
+                  >
+                    No strategy tips for this track yet — just drive clean and
+                    hold your line.
+                  </p>
+                )}
+              </div>
+            </Card>
+
+            {/* Actions */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 12,
+                justifyContent: "center",
+                paddingTop: 4,
+              }}
+            >
+              <Button
+                variant="outline"
+                size="md"
+                iconLeft="trophy"
+                onClick={() => setPickOpen(true)}
+              >
+                Change winner
+              </Button>
+              <Button variant="ghost" size="md" onClick={reset}>
+                Start over
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* "Which track won the vote?" pop-up — available from ranked + tips. */}
+        <Dialog
+          open={pickOpen}
+          onClose={() => setPickOpen(false)}
+          icon="trophy"
+          title="Which track won the vote?"
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "var(--text-sm)",
+                color: "var(--ink-500)",
+                margin: "0 0 4px",
+                fontWeight: 500,
+              }}
+            >
+              The lobby picks one of the three. Tap the track that actually came
+              up — we'll load its tips.
+            </p>
+            {ranked.map(({ rec, track }, i) => {
+              const isPick = i === 0;
+              const isWinner = rec.trackId === winnerId;
+              return (
+                <button
+                  key={rec.trackId}
+                  type="button"
+                  onClick={() => chooseWinner(rec.trackId)}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "var(--ink-100)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = isWinner
+                      ? "var(--boost-50)"
+                      : "var(--white)")
+                  }
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    padding: "12px 14px",
+                    background: isWinner ? "var(--boost-50)" : "var(--white)",
+                    border: "var(--border-base) solid var(--ink-900)",
+                    borderRadius: "var(--radius-md)",
+                    boxShadow: "var(--shadow-pop-sm)",
+                    cursor: "pointer",
+                    textAlign: "left",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 14,
+                      height: 40,
+                      borderRadius: "var(--radius-xs)",
+                      background: track.headerColor,
+                      border: "var(--border-base) solid var(--ink-900)",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      minWidth: 0,
+                      flex: 1,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-ui)",
+                        fontWeight: 600,
+                        fontSize: "var(--text-md)",
+                        color: "var(--ink-900)",
+                      }}
+                    >
+                      {track.name}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: "var(--text-xs)",
+                        color: "var(--ink-500)",
+                      }}
+                    >
+                      {track.cup} · {track.laps} laps
+                    </span>
+                  </span>
+                  {isPick && (
+                    <Badge color="boost" soft>
+                      Your pick
+                    </Badge>
+                  )}
+                  <Icon
+                    name="chevron-right"
+                    size={20}
+                    color="var(--ink-400)"
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </Dialog>
       </div>
     </div>
   );
