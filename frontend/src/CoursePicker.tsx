@@ -1102,14 +1102,6 @@ export function CoursePicker() {
               >
                 Which track won?
               </Button>
-              <Button
-                variant="outline"
-                size="md"
-                iconLeft="shuffle"
-                onClick={() => recommend.mutate()}
-              >
-                Reroll the ballot
-              </Button>
               <Button variant="ghost" size="md" onClick={reset}>
                 Start over
               </Button>
