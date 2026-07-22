@@ -19,7 +19,7 @@ repo pins — backend versions in `backend/requirements.txt`, frontend versions 
 ```bash
 cd backend
 pip install -r requirements.txt
-python seed.py          # create + seed mariokart.db (required before first run; DB is gitignored)
+python seed_all.py      # create + seed mariokart.db with all 96 tracks (required before first run; DB is gitignored)
 uvicorn main:app --reload   # serves on http://localhost:8000
 ```
 
@@ -43,8 +43,10 @@ Two independent apps talking over a REST API.
 The scoring logic lives entirely in `recommender.py`; `main.py` only validates input, loads
 tracks (with their strategies) from the DB, calls `score_track`, sorts, and flags the top result
 as `recommended`. `database.py` holds the SQLite engine/session; `models.py` defines the two
-tables; `seed.py` is the sole source of track/strategy data and is idempotent (skips rows that
-already exist).
+tables; `seed_all.py` is the canonical source of track/strategy data — the full 96-course, 24-cup
+catalog — and is idempotent (skips rows that already exist). The older `seed.py` seeds only the
+first two cups and uses an incompatible id scheme (Golden Dash 5–8 vs 49–52), so run `seed_all.py`
+against a fresh DB rather than mixing the two.
 
 **The recommender (`recommender.py`)** is the heart of the app. A track's score = a graded
 position-band fit plus a small trait adjustment:

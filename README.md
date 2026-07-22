@@ -27,8 +27,8 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
     - [x] Remove template cards, link backend so cards contain real information
       - mushroom cup only is in right now, after testing, full list will go in
     - [x] Add dlc status
-    - [ ] Seed the remaining tracks
-      - also fills out the terrain filter, which is all "None" until then
+    - [x] Seed the remaining tracks
+      - all 24 cups / 96 courses via `seed_all.py`; also fills out the terrain filter with real Sand/Ice grades
   - Track Picker (flagship feature)
     - [x] UI
     - [x] Seed strategies table
