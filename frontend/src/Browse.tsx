@@ -104,9 +104,11 @@ function TrackCard({ track }: TrackCardProps) {
         </div>
 
         <div className="mk-browse-traits">
-          <Badge color="drift" soft dot>
-            {track.terrain}
-          </Badge>
+          {track.terrain !== "None" && (
+            <Badge color="drift" soft dot>
+              {track.terrain}
+            </Badge>
+          )}
           {track.traits.map((trait) => (
             <Badge key={trait} color="neutral" soft>
               {trait}
@@ -166,7 +168,9 @@ export function Browse() {
   // Terrain filter options are the distinct classifications present in the
   // catalog, so the sidebar auto-populates as sandy/icy tracks get added.
   const terrainOptions = useMemo(() => {
-    return [...new Set((data ?? []).map((t) => t.terrain))].sort();
+    return [...new Set((data ?? []).map((t) => t.terrain))]
+      .filter((terrain) => terrain !== "None")
+      .sort();
   }, [data]);
 
   const tracks = useMemo(() => {
