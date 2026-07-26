@@ -23,6 +23,10 @@
   --coin-400:  #ffd45e;
   --coin-100:  #fff1c9;
 
+  --sand-500:  #c9a55c;   /* terrain — desert sand tan */
+  --sand-600:  #8a6a2f;
+  --sand-100:  #f5ead2;
+
   /* ---- Item-box accents (category / tier coding) ---------------------- */
   --shell-red:   #ff3b5c;
   --mushroom:    #18c964;

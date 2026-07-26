@@ -105,8 +105,12 @@ function TrackCard({ track }: TrackCardProps) {
 
         <div className="mk-browse-traits">
           {track.terrain !== "None" && (
-            <Badge color="drift" soft dot>
-              {track.terrain}
+            <Badge
+              color={track.terrain.includes("Sand") ? "sand" : "drift"}
+              soft
+              dot
+            >
+              {track.terrain.includes("Sand") ? "Sand" : "Ice"}
             </Badge>
           )}
           {track.traits.map((trait) => (

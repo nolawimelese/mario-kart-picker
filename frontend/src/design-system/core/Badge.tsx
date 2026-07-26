@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  color?: "boost" | "drift" | "coin" | "success" | "danger" | "purple" | "neutral";
+  color?: "boost" | "drift" | "coin" | "sand" | "success" | "danger" | "purple" | "neutral";
   /** Soft tinted fill instead of solid. */
   soft?: boolean;
   /** Show a leading status dot. */
@@ -14,6 +14,7 @@ export function Badge({ children, color = "boost", soft = false, dot = false, st
     boost: ["var(--boost-500)", "var(--boost-100)", "var(--boost-600)"],
     drift: ["var(--drift-500)", "var(--drift-100)", "var(--drift-600)"],
     coin: ["var(--coin-500)", "var(--coin-100)", "#8a6a00"],
+    sand: ["var(--sand-500)", "var(--sand-100)", "var(--sand-600)"],
     success: ["var(--mushroom)", "#d6f7e4", "#0e8f48"],
     danger: ["var(--shell-red)", "#ffe0e6", "#d61f3f"],
     purple: ["var(--star-purple)", "#ece4ff", "#6d39e0"],
