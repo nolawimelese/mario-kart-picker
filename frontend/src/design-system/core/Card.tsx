@@ -25,16 +25,22 @@ export function Card({ children, pop = false, interactive = false, padding = 20,
   };
   return (
     <div
-      onMouseEnter={interactive ? (e) => {
-        e.currentTarget.style.transform = "translate(-2px,-2px)";
-        e.currentTarget.style.boxShadow = pop ? "var(--shadow-pop-lg)" : "var(--shadow-md)";
-      } : undefined}
-      onMouseLeave={interactive ? (e) => {
-        e.currentTarget.style.transform = "";
-        e.currentTarget.style.boxShadow = pop ? "var(--shadow-pop)" : "var(--shadow-sm)";
-      } : undefined}
-      style={{ ...base, cursor: interactive ? "pointer" : "default" }}
       {...rest}
+      onMouseEnter={(e) => {
+        if (interactive) {
+          e.currentTarget.style.transform = "translate(-2px,-2px)";
+          e.currentTarget.style.boxShadow = pop ? "var(--shadow-pop-lg)" : "var(--shadow-md)";
+        }
+        rest.onMouseEnter?.(e);
+      }}
+      onMouseLeave={(e) => {
+        if (interactive) {
+          e.currentTarget.style.transform = "";
+          e.currentTarget.style.boxShadow = pop ? "var(--shadow-pop)" : "var(--shadow-sm)";
+        }
+        rest.onMouseLeave?.(e);
+      }}
+      style={{ ...base, cursor: interactive ? "pointer" : "default" }}
     >
       {children}
     </div>

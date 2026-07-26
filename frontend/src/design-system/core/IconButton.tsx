@@ -42,10 +42,11 @@ export function IconButton({
       aria-label={label}
       title={label}
       disabled={disabled}
-      onMouseDown={(e) => { if (interactive) { e.currentTarget.style.transform = "translate(2px,2px)"; e.currentTarget.style.boxShadow = "0 0 0 var(--ink-900)"; } }}
-      onMouseUp={(e) => { if (interactive) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "var(--shadow-pop-sm)"; } }}
-      onMouseLeave={(e) => { if (interactive) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "var(--shadow-pop-sm)"; } if (variant === "ghost") e.currentTarget.style.background = "transparent"; }}
-      onMouseEnter={(e) => { if (!disabled && variant === "ghost") e.currentTarget.style.background = "var(--ink-100)"; }}
+      {...rest}
+      onMouseDown={(e) => { if (interactive) { e.currentTarget.style.transform = "translate(2px,2px)"; e.currentTarget.style.boxShadow = "0 0 0 var(--ink-900)"; } rest.onMouseDown?.(e); }}
+      onMouseUp={(e) => { if (interactive) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "var(--shadow-pop-sm)"; } rest.onMouseUp?.(e); }}
+      onMouseLeave={(e) => { if (interactive) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "var(--shadow-pop-sm)"; } if (variant === "ghost") e.currentTarget.style.background = "transparent"; rest.onMouseLeave?.(e); }}
+      onMouseEnter={(e) => { if (!disabled && variant === "ghost") e.currentTarget.style.background = "var(--ink-100)"; rest.onMouseEnter?.(e); }}
       style={{
         display: "inline-grid",
         placeItems: "center",
@@ -62,7 +63,6 @@ export function IconButton({
         WebkitTapHighlightColor: "transparent",
         ...style,
       }}
-      {...rest}
     >
       <Icon name={icon} size={iconSizes[size] || 20} />
     </button>

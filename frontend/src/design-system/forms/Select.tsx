@@ -23,9 +23,9 @@ export function Select({ options = [], size = "md", style, ...rest }: SelectProp
       }}
     >
       <select
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
         {...rest}
+        onFocus={(e) => { setFocused(true); rest.onFocus?.(e); }}
+        onBlur={(e) => { setFocused(false); rest.onBlur?.(e); }}
         style={{
           appearance: "none",
           WebkitAppearance: "none",

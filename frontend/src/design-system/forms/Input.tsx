@@ -34,9 +34,9 @@ export function Input({ icon, size = "md", invalid = false, style, wrapStyle, ..
     >
       {icon && <Icon name={icon} size={18} color="var(--ink-400)" />}
       <input
-        onFocus={(e) => { setFocused(true); rest.onFocus && rest.onFocus(e); }}
-        onBlur={(e) => { setFocused(false); rest.onBlur && rest.onBlur(e); }}
         {...rest}
+        onFocus={(e) => { setFocused(true); rest.onFocus?.(e); }}
+        onBlur={(e) => { setFocused(false); rest.onBlur?.(e); }}
         style={{
           flex: 1,
           minWidth: 0,

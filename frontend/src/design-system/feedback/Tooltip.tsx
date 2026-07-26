@@ -17,10 +17,10 @@ export function Tooltip({ label, side = "top", children, style, ...rest }: Toolt
   };
   return (
     <span
-      style={{ position: "relative", display: "inline-flex", ...style }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
       {...rest}
+      style={{ position: "relative", display: "inline-flex", ...style }}
+      onMouseEnter={(e) => { setShow(true); rest.onMouseEnter?.(e); }}
+      onMouseLeave={(e) => { setShow(false); rest.onMouseLeave?.(e); }}
     >
       {children}
       {show && (

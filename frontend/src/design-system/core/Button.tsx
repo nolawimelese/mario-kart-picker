@@ -82,11 +82,11 @@ export function Button({
       type={type}
       disabled={disabled}
       style={base}
-      onMouseDown={onDown}
-      onMouseUp={onUp}
-      onMouseEnter={onEnterGhost}
-      onMouseLeave={onLeaveGhost}
       {...rest}
+      onMouseDown={(e) => { onDown(e); rest.onMouseDown?.(e); }}
+      onMouseUp={(e) => { onUp(e); rest.onMouseUp?.(e); }}
+      onMouseEnter={(e) => { onEnterGhost(e); rest.onMouseEnter?.(e); }}
+      onMouseLeave={(e) => { onLeaveGhost(e); rest.onMouseLeave?.(e); }}
     >
       {iconLeft && <Icon name={iconLeft} size={s.icon} />}
       {children}
