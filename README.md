@@ -36,3 +36,10 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
     - [x] Develop rule based algo
       - [x] weigh in track traits to break ties
     - [x] Pre racing tips & tricks page
+- Deployment
+  - [ ] finalize app
+    - [ ] delete unused files
+  - [ ] fix lint errors
+  - [ ] remove ngrok from vite config
+  - [ ] add health check endpoint
+  - [ ] research deployment options

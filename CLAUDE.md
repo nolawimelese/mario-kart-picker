@@ -39,14 +39,18 @@ There is no test suite in this repo.
 
 Two independent apps talking over a REST API.
 
-**Backend request flow:** `main.py` defines two endpoints — `GET /tracks` and `POST /recommend`.
-The scoring logic lives entirely in `recommender.py`; `main.py` only validates input, loads
-tracks (with their strategies) from the DB, calls `score_track`, sorts, and flags the top result
-as `recommended`. `database.py` holds the SQLite engine/session; `models.py` defines the two
-tables; `seed_all.py` is the canonical source of track/strategy data — the full 96-course, 24-cup
-catalog — and is idempotent (skips rows that already exist). The older `seed.py` seeds only the
-first two cups and uses an incompatible id scheme (Golden Dash 5–8 vs 49–52), so run `seed_all.py`
-against a fresh DB rather than mixing the two.
+**Backend request flow:** `main.py` defines two endpoints — `GET /tracks` (every track, without
+its strategies) and `POST /recommend`. There is no health-check endpoint yet. The scoring logic
+lives entirely in `recommender.py`; `main.py` only validates input, loads tracks (with their
+strategies) from the DB, calls `score_track`, sorts, and flags the top result as `recommended`.
+`database.py` holds the SQLite engine/session; `models.py` defines the two tables; `seed_all.py`
+is the canonical source of track/strategy data — the full 96-course, 24-cup catalog — and is
+idempotent (tracks matched by id, strategies by `track_id` + band).
+
+Do not run the older `seed.py`: it seeds Mushroom Cup at ids 1–4 and **Golden Dash Cup at ids
+5–8**, but `seed_all.py` puts Flower Cup at 5–8 and Golden Dash at 49–52. Since `seed_all.py`
+skips ids that already exist, seeding `seed.py` first leaves Flower Cup permanently missing.
+Always seed a fresh DB with `seed_all.py` alone.
 
 **The recommender (`recommender.py`)** is the heart of the app. A track's score = a graded
 position-band fit plus a small trait adjustment:
@@ -54,17 +58,27 @@ position-band fit plus a small trait adjustment:
 - Each `Strategy` targets a starting-grid band `[position_min, position_max]` on a fixed 12-kart
   grid (`FIELD_SIZE = 12`, 1 = pole). `band_fit` returns 1.0 inside the band and decays linearly
   to 0 over `FALLOFF` positions outside it. A track can have multiple strategies (e.g. a front
-  "defend" band and a back "gamble" band); `score_track` picks the best-fitting one.
+  "defend" band and a back "gamble" band) and `score_track` picks the best-fitting one, but that
+  is the exception: 93 of the 96 seeded tracks carry a single band, only 3 carry two. Every
+  seeded track has at least one, so `score_track`'s "no strategy defined" fallback only fires
+  against a partially seeded DB.
 - `trait_adjust` nudges the score using `TRAIT_LEAN` (per-trait bias in [-1, +1]: negative favors
   the front, positive favors the back), weighted by `TRAIT_BONUS_WEIGHT` so traits break ties but
   never override band fit. Tuning the recommender means editing these constants and the seed data.
 - The raw score is normalized by `MAX_RAW_SCORE` (best band fit + strongest possible trait bonus)
   so scores land in [0, 1]; the frontend renders them as a 0–100 pick score.
 
-**Data model:** `Track` (name, cup, laps, header_color, `traits` as JSON, `dlc`) has a one-to-many
-`strategies` relationship to `Strategy` (position band, `tips` as JSON). Traits double as
-both display chips and recommender inputs, so the `TRAIT_LEAN` keys must match trait strings used
-in `seed.py`.
+**Data model:** `Track` (name, cup, laps, header_color, description, terrain, `traits` as JSON,
+`dlc`) has a one-to-many `strategies` relationship to `Strategy` (position band, `tips` as JSON).
+`terrain` is the MK8DX slippery off-road grade — `"None"` or a Light/Medium/Heavy Sand/Ice
+grade — and is **display-only today**: it drives the Browse badge and terrain filter but is not
+read by `score_track`.
+
+**Trait strings are a three-way invariant.** The same nine trait strings must agree across the
+seed data in `seed_all.py`, the `TRAIT_LEAN` keys in `recommender.py`, and `ALL_TRAITS` in
+`frontend/src/Browse.tsx`. A trait missing from `TRAIT_LEAN` silently scores 0; one missing from
+`ALL_TRAITS` is invisible in the Browse filter. Adding or renaming a trait means editing all
+three.
 
 **API contract / naming:** The backend serializes with a camelCase alias generator
 (`to_camel`), so Python snake_case fields cross the wire as camelCase (`header_color` →
@@ -72,14 +86,34 @@ in `seed.py`.
 with backend `TrackOut`.
 
 **Frontend structure:** `App.tsx` toggles between a `Splash` screen and `Home`. `Home` renders
-`TopNav` plus the active tab — `Browse` (track catalog with search/filters) and `CoursePicker`
-(the Track Picker UI) are both live. API calls go through `frontend/src/api/` (`tracks.ts` for
-`GET /tracks`, `recommend.ts` for `POST /recommend`). The dev server proxies `/api/*` to
-`http://localhost:8000` (see `vite.config.ts`), stripping the `/api` prefix; `VITE_API_URL`
-overrides the base. CORS on the backend only allows `http://localhost:5173`.
+`TopNav` plus the active tab — `Browse` and `CoursePicker` are both live. API calls go through
+`frontend/src/api/` (`tracks.ts` for `GET /tracks`, `recommend.ts` for `POST /recommend`).
+
+- **`CoursePicker.tsx`** is a four-phase state machine (`Phase`): `input` (pick a finishing
+  position, search-and-add 3 ballot tracks) → `loading` (arcade spin held for at least
+  `MIN_SPIN_MS` even if the API returns sooner) → `ranked` (top pick plus runners-up, scores
+  rendered 0–100 via `pickScore`) → `tips`. The `tips` phase is reached only through the "which
+  track won?" `Dialog`: the lobby's actual winner may not be our top pick, so the user logs it
+  and gets that track's `strategyTips`. This is what the README roadmap calls the "pre racing
+  tips & tricks page" — it's a phase of the picker, not a separate tab.
+- **`Browse.tsx`** filters the catalog client-side: name-only search plus terrain and trait tags,
+  all ANDed. Terrain options are derived from the loaded catalog at runtime (so new sandy/icy
+  tracks self-register) with `"None"` dropped; the card badge shows the bare `Sand`/`Ice`, not
+  the Light/Medium/Heavy grade.
+
+The dev server proxies `/api/*` to `http://localhost:8000` (see `vite.config.ts`), stripping the
+`/api` prefix; `VITE_API_URL` overrides the base. `vite.config.ts` also whitelists an ngrok host
+under `server.allowedHosts` (flagged for removal in the README roadmap — note it lives here, not
+in the backend). CORS on the backend only allows `http://localhost:5173`.
 
 **Design system (`frontend/src/design-system/`)** is a self-contained component library exported
 through one barrel (`index.ts`) — import UI from `./design-system`, not from individual files.
 Design tokens (colors, spacing, fonts, etc.) are CSS custom properties under `tokens/`; components
 and seed data reference colors via `var(--...)` (e.g. `header_color: "var(--boost-500)"`), so
 color values live in CSS, not in TS/Python.
+
+**Design notes:** `docs/surface-traits-design.md` proposes classifying each track by a dominant
+surface (Water / Anti-grav / Glider / None) to feed a future kart-combo scoring layer, kept
+deliberately separate from the front/back `TRAIT_LEAN` axis. It is **proposed only — no code
+written**; read it before reworking the recommender, but don't treat it as describing today's
+behavior.
