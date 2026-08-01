@@ -61,18 +61,26 @@ def band_fit(position, strategy):
     return max(0.0, 1.0 - distance / FALLOFF)
 
 
+def net_lean(track):
+    '''Signed sum of a track's trait leans: negative favors the front, positive
+    the back. Which way a track leans is a property of the track alone.'''
+    return sum(TRAIT_LEAN.get(t, 0.0) for t in (track.traits or []))
+
+
 def trait_adjust(track, position):
     '''Signed nudge: positive when a back-favoring track meets a back-of-grid
     position (and symmetrically for front-favoring tracks up front).'''
     back_bias = (position - 1) / (FIELD_SIZE - 1)  # 0.0 at P1 -> 1.0 at P12
-    net_lean = sum(TRAIT_LEAN.get(t, 0.0) for t in (track.traits or []))
-    return net_lean * (back_bias - 0.5)
+    return net_lean(track) * (back_bias - 0.5)
 
 
-def _dominant_traits(track):
-    '''Traits with the strongest (non-zero) lean, for the human-readable reason.'''
+def _dominant_traits(track, lean):
+    '''Traits driving the track's net ``lean``, strongest first, for the reason.'''
     leaning = [(t, TRAIT_LEAN.get(t, 0.0)) for t in (track.traits or [])]
-    leaning = [(t, w) for t, w in leaning if w != 0.0]
+    # Only traits pulling the same way as the net lean: the reason applies one
+    # direction label to whatever this returns, so a counter-leaning trait
+    # listed here would be described backwards.
+    leaning = [(t, w) for t, w in leaning if w != 0.0 and (w > 0) == (lean > 0)]
     leaning.sort(key=lambda tw: abs(tw[1]), reverse=True)
     return [t for t, _ in leaning[:2]]
 
@@ -99,10 +107,20 @@ def score_track(track, position):
         f"Suits starts from P{best.position_min}-P{best.position_max} "
         f"(you're on P{position})."
     )
-    dominant = _dominant_traits(track)
-    if dominant and adjust:
-        direction = "back-of-grid" if adjust > 0 else "front-running"
-        reason += f" Its {', '.join(dominant)} lean {direction} play here."
+    # Which way the traits lean comes from the track (`lean`); whether that
+    # helps comes from the track *and* the position (`adjust`). Reading the
+    # direction off `adjust` inverts it for every front-half start.
+    lean = net_lean(track)
+    dominant = _dominant_traits(track, lean) if lean else []
+    if dominant:
+        direction = "back-of-grid" if lean > 0 else "front-running"
+        verb = "favor" if len(dominant) > 1 else "favors"
+        fit = (
+            "which suits your spot on the grid"
+            if adjust > 0
+            else "which is less of an edge from your spot"
+        )
+        reason += f" Its {', '.join(dominant)} {verb} {direction} play, {fit}."
 
     return ScoreResult(
         score=score,
