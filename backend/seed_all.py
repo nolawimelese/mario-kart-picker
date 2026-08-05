@@ -221,7 +221,7 @@ special_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
-        "terrain": "Heavy Sand",
+        "terrain": "Sand",
         "traits": ["Anti-grav", "Hazards"],
         "description": (
             "A parched graveyard desert of loose sand and rattling Dry Bones — "
@@ -332,7 +332,7 @@ banana_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--boost-500)",
-        "terrain": "Heavy Sand",
+        "terrain": "Sand",
         "traits": ["Hazards"],
         "description": (
             "A blistering loop around a sinking sun temple — a Pokey-guarded "
@@ -410,7 +410,7 @@ leaf_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
-        "terrain": "Heavy Ice",
+        "terrain": "Ice",
         "traits": ["Cave", "Hazards"],
         "description": (
             "A glittering frozen cavern where the ice sends karts skating wide "
@@ -614,7 +614,7 @@ triforce_cup_tracks = [
         "dlc": False,
         "laps": 3,
         "header_color": "var(--star-purple)",
-        "terrain": "Medium Ice",
+        "terrain": "Ice",
         "traits": ["Shortcuts"],
         "description": (
             "A frozen research outpost split into twin parallel ice tracks — "
@@ -931,7 +931,7 @@ turnip_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--star-purple)",
-        "terrain": "Medium Sand",
+        "terrain": "Sand",
         "traits": ["Hazards"],
         "description": (
             "A sun-baked desert loop crossed by a running steam train — time "
@@ -979,7 +979,7 @@ propeller_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
-        "terrain": "Medium Ice",
+        "terrain": "Ice",
         "traits": ["Hazards"],
         "description": (
             "A frosty retro trek through drifting snow — slick ice patches and "
@@ -1120,7 +1120,7 @@ moon_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--star-purple)",
-        "terrain": "Light Ice",
+        "terrain": "Ice",
         "traits": ["Glider"],
         "description": (
             "A festive descent down a snow-dusted holiday mountain — twinkling "
@@ -1183,7 +1183,7 @@ fruit_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--star-purple)",
-        "terrain": "Medium Ice",
+        "terrain": "Ice",
         "traits": ["Glider", "Hazards"],
         "description": (
             "A snowboard-cross plunge down DK's snowy summit — a cannon launch "
@@ -1357,7 +1357,7 @@ cherry_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
-        "terrain": "Light Sand",
+        "terrain": "Sand",
         "traits": ["Hazards"],
         "description": (
             "A dusty savanna at golden hour where the sun sinks lower each lap — "
@@ -1483,7 +1483,7 @@ spiny_cup_tracks = [
         "dlc": True,
         "laps": 3,
         "header_color": "var(--boo-cyan)",
-        "terrain": "Heavy Ice",
+        "terrain": "Ice",
         "traits": ["Cave", "Hazards"],
         "description": (
             "A glittering trek through a frozen crystal world — luminous ice "

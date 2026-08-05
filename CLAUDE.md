@@ -70,9 +70,9 @@ position-band fit plus a small trait adjustment:
 
 **Data model:** `Track` (name, cup, laps, header_color, description, terrain, `traits` as JSON,
 `dlc`) has a one-to-many `strategies` relationship to `Strategy` (position band, `tips` as JSON).
-`terrain` is the MK8DX slippery off-road grade — `"None"` or a Light/Medium/Heavy Sand/Ice
-grade — and is **display-only today**: it drives the Browse badge and terrain filter but is not
-read by `score_track`.
+`terrain` is the MK8DX slippery off-road classification — `"None"`, `"Sand"`, or `"Ice"` — and is
+**display-only today**: it drives the Browse badge and terrain filter but is not read by
+`score_track`.
 
 **Trait strings are a three-way invariant.** The same nine trait strings must agree across the
 seed data in `seed_all.py`, the `TRAIT_LEAN` keys in `recommender.py`, and `ALL_TRAITS` in
@@ -98,8 +98,7 @@ with backend `TrackOut`.
   tips & tricks page" — it's a phase of the picker, not a separate tab.
 - **`Browse.tsx`** filters the catalog client-side: name-only search plus terrain and trait tags,
   all ANDed. Terrain options are derived from the loaded catalog at runtime (so new sandy/icy
-  tracks self-register) with `"None"` dropped; the card badge shows the bare `Sand`/`Ice`, not
-  the Light/Medium/Heavy grade.
+  tracks self-register) with `"None"` dropped.
 
 The dev server proxies `/api/*` to `http://localhost:8000` (see `vite.config.ts`), stripping the
 `/api` prefix; `VITE_API_URL` overrides the base. `vite.config.ts` also whitelists an ngrok host

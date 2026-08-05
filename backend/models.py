@@ -11,9 +11,8 @@ class Track(Base):
     laps: Mapped[int] = mapped_column(Integer)
     header_color: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
-    # Slippery off-road classification from the MK8DX in-game statistics:
-    # None - (no traction-reducing surface)
-    # Light/Medium/Heavy Sand/Ice grade.
+    # Slippery off-road classification: "None" (no traction-reducing
+    # surface), "Sand", or "Ice".
     terrain: Mapped[str] = mapped_column(String)
     # Traits shown as tags under the title (also used for filtering).
     traits: Mapped[list[str]] = mapped_column(JSON)

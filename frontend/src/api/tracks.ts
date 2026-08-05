@@ -5,8 +5,7 @@ export interface Track {
   laps: number;
   /** Traits shown as chips under the title (also used for filtering). */
   traits: string[];
-  /** Slippery off-road classification: "None" or a Light/Medium/Heavy
-   * Sand/Ice grade (from MK8DX in-game statistics). */
+  /** Slippery off-road classification: "None", "Sand", or "Ice". */
   terrain: string;
   /** CSS color value for the checkered header banner. */
   headerColor: string;
