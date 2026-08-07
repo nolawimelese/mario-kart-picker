@@ -43,3 +43,7 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
   - [x] remove ngrok from vite config
   - [x] add health check endpoint
   - [x] research deployment options
+  - [x] make CORS origins configurable (`ALLOWED_ORIGINS` env var) for a deployed frontend host
+  - [x] ship the seeded database with the repo instead of gitignoring it
+  - [x] deploy backend and frontend
+  - [ ] make deployment adjustments

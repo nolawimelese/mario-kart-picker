@@ -19,7 +19,7 @@ repo pins — backend versions in `backend/requirements.txt`, frontend versions 
 ```bash
 cd backend
 pip install -r requirements.txt
-python seed_all.py      # create + seed mariokart.db with all 96 tracks (required before first run; DB is gitignored)
+python seed_all.py      # create + seed mariokart.db with all 96 tracks (required before first run; DB is checked into the repo)
 uvicorn main:app --reload   # serves on http://localhost:8000
 ```
 
@@ -39,17 +39,15 @@ There is no test suite in this repo.
 
 Two independent apps talking over a REST API.
 
-**Backend request flow:** `main.py` defines two endpoints — `GET /tracks` (every track, without
-its strategies) and `POST /recommend`. There is no health-check endpoint yet. The scoring logic
-lives entirely in `recommender.py`; `main.py` only validates input, loads tracks (with their
+**Backend request flow:** `main.py` defines `GET /` and `GET /health` (both trivial
+`{"status": "ok"}` checks), `GET /tracks` (every track, without its strategies), and
+`POST /recommend`. The scoring logic lives entirely in `recommender.py`; `main.py` only
+validates input, loads tracks (with their
 strategies) from the DB, calls `score_track`, sorts, and flags the top result as `recommended`.
 `database.py` holds the SQLite engine/session; `models.py` defines the two tables; `seed_all.py`
 is the canonical source of track/strategy data — the full 96-course, 24-cup catalog — and is
 idempotent (tracks matched by id, strategies by `track_id` + band).
 
-Do not run the older `seed.py`: it seeds Mushroom Cup at ids 1–4 and **Golden Dash Cup at ids
-5–8**, but `seed_all.py` puts Flower Cup at 5–8 and Golden Dash at 49–52. Since `seed_all.py`
-skips ids that already exist, seeding `seed.py` first leaves Flower Cup permanently missing.
 Always seed a fresh DB with `seed_all.py` alone.
 
 **The recommender (`recommender.py`)** is the heart of the app. A track's score = a graded
@@ -95,15 +93,17 @@ with backend `TrackOut`.
   rendered 0–100 via `pickScore`) → `tips`. The `tips` phase is reached only through the "which
   track won?" `Dialog`: the lobby's actual winner may not be our top pick, so the user logs it
   and gets that track's `strategyTips`. This is what the README roadmap calls the "pre racing
-  tips & tricks page" — it's a phase of the picker, not a separate tab.
+  tips & tricks page" — it's a phase of the picker, not a separate tab. The `input` phase surfaces
+  a fetch-failure hint (`isError` off the `tracks` query) so a downed backend fails visibly
+  instead of leaving the ballot search silently empty.
 - **`Browse.tsx`** filters the catalog client-side: name-only search plus terrain and trait tags,
   all ANDed. Terrain options are derived from the loaded catalog at runtime (so new sandy/icy
   tracks self-register) with `"None"` dropped.
 
 The dev server proxies `/api/*` to `http://localhost:8000` (see `vite.config.ts`), stripping the
-`/api` prefix; `VITE_API_URL` overrides the base. `vite.config.ts` also whitelists an ngrok host
-under `server.allowedHosts` (flagged for removal in the README roadmap — note it lives here, not
-in the backend). CORS on the backend only allows `http://localhost:5173`.
+`/api` prefix; `VITE_API_URL` overrides the base. CORS on the backend reads its allowlist from
+the `ALLOWED_ORIGINS` env var (comma-separated, defaults to `http://localhost:5173`) — set it to
+the deployed frontend origin(s) in production.
 
 **Design system (`frontend/src/design-system/`)** is a self-contained component library exported
 through one barrel (`index.ts`) — import UI from `./design-system`, not from individual files.
