@@ -155,7 +155,7 @@ export function CoursePicker() {
   const spinStart = useRef(0);
   const spinTimer = useRef<number | undefined>(undefined);
 
-  const { data: allTracks } = useQuery({
+  const { data: allTracks, isError: tracksError } = useQuery({
     queryKey: ["tracks"],
     queryFn: fetchTracks,
   });
@@ -476,6 +476,12 @@ export function CoursePicker() {
                 <p style={stepHint}>
                   Search and add the 3 tracks Mario Kart is offering you.
                 </p>
+
+                {tracksError && (
+                  <p style={{ ...stepHint, color: "var(--shell-red)" }}>
+                    Couldn't reach the track catalog — is the backend running?
+                  </p>
+                )}
 
                 <div style={{ position: "relative" }}>
                   <Input
