@@ -69,6 +69,16 @@ def get_db():
         db.close()
 
 
+@app.get("/")
+def root():
+    return {"status": "ok"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 @app.get("/tracks", response_model=list[TrackOut])
 def list_tracks(db: Session = Depends(get_db)):
     return db.query(Track).all()
