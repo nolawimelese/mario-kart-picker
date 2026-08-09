@@ -1,9 +1,13 @@
 import "./Splash.css";
-import { Logo, Button } from "./design-system";
+import { Logo, Button, Icon } from "./design-system";
 
 export interface SplashProps {
   /** Called when the user clicks "Let's Race". */
   onStart?: () => void;
+  /** Whether the track catalog is still being fetched. */
+  loading?: boolean;
+  /** Whether the track catalog fetch failed. */
+  error?: boolean;
 }
 
 /**
@@ -11,7 +15,7 @@ export interface SplashProps {
  * Full-viewport cream frame with the arcade checker motif, floating item-box
  * shapes, the wordmark, and the "Let's Race" entry CTA.
  */
-export function Splash({ onStart }: SplashProps) {
+export function Splash({ onStart, loading, error }: SplashProps) {
   return (
     <div
       style={{
@@ -162,11 +166,41 @@ export function Splash({ onStart }: SplashProps) {
           </span>
         </div>
 
+        {error && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginTop: 6,
+              padding: "12px 16px",
+              background: "var(--shell-red)",
+              color: "#fff",
+              border: "var(--border-base) solid var(--ink-900)",
+              borderRadius: "var(--radius-md)",
+              boxShadow: "var(--shadow-pop-sm)",
+              maxWidth: 460,
+            }}
+          >
+            <Icon name="alert" size={18} color="#fff" />
+            <span
+              style={{
+                fontFamily: "var(--font-ui)",
+                fontWeight: 600,
+                fontSize: "var(--text-sm)",
+              }}
+            >
+              Couldn't reach the track catalog — is the backend running?
+            </span>
+          </div>
+        )}
+
         <div style={{ marginTop: 14 }}>
           <Button
             variant="primary"
             size="lg"
             iconRight="flag"
+            disabled={loading && !error}
             onClick={onStart}
           >
             Let's Race
