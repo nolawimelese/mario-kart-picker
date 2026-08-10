@@ -8,6 +8,10 @@ export interface SplashProps {
   loading?: boolean;
   /** Whether the track catalog fetch failed. */
   error?: boolean;
+  /** Whether the "Let's Race" health check is in flight. */
+  checking?: boolean;
+  /** Whether the "Let's Race" health check failed. */
+  checkError?: boolean;
 }
 
 /**
@@ -15,7 +19,13 @@ export interface SplashProps {
  * Full-viewport cream frame with the arcade checker motif, floating item-box
  * shapes, the wordmark, and the "Let's Race" entry CTA.
  */
-export function Splash({ onStart, loading, error }: SplashProps) {
+export function Splash({
+  onStart,
+  loading,
+  error,
+  checking,
+  checkError,
+}: SplashProps) {
   return (
     <div
       style={{
@@ -166,7 +176,7 @@ export function Splash({ onStart, loading, error }: SplashProps) {
           </span>
         </div>
 
-        {error && (
+        {(error || checkError) && (
           <div
             style={{
               display: "flex",
@@ -190,7 +200,9 @@ export function Splash({ onStart, loading, error }: SplashProps) {
                 fontSize: "var(--text-sm)",
               }}
             >
-              Couldn't reach the track catalog — is the backend running?
+              {checkError
+                ? "Couldn't reach the server — is the backend running?"
+                : "Couldn't reach the track catalog — is the backend running?"}
             </span>
           </div>
         )}
@@ -200,7 +212,7 @@ export function Splash({ onStart, loading, error }: SplashProps) {
             variant="primary"
             size="lg"
             iconRight="flag"
-            disabled={loading && !error}
+            disabled={(loading && !error) || checking}
             onClick={onStart}
           >
             Let's Race

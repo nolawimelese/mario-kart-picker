@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import "./App.css";
 import { Splash } from "./Splash";
 import { Home } from "./Home";
 import { fetchTracks } from "./api/tracks";
+import { fetchHealth } from "./api/health";
 
 function App() {
   const [view, setView] = useState<"splash" | "home">("splash");
@@ -11,6 +12,11 @@ function App() {
   const { isPending, isSuccess, isError } = useQuery({
     queryKey: ["tracks"],
     queryFn: fetchTracks,
+  });
+
+  const healthCheck = useMutation({
+    mutationFn: fetchHealth,
+    onSuccess: () => setView("home"),
   });
 
   useEffect(() => {
@@ -21,7 +27,9 @@ function App() {
     <Splash
       loading={isPending}
       error={isError}
-      onStart={() => setView("home")}
+      checking={healthCheck.isPending}
+      checkError={healthCheck.isError}
+      onStart={() => healthCheck.mutate()}
     />
   ) : (
     <Home />
