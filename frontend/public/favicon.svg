@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<defs></defs>
+<path d="M27 3 L73 3 Q97 3 97 27 L97 73 Q97 97 73 97 L27 97 Q3 97 3 73 L3 27 Q3 3 27 3 Z" fill="#ff6a1a"></path>
+<text x="50" y="53.5" text-anchor="middle" fill="#fff8ef" style="font-family:&#39;Lilita One&#39;,sans-serif;font-size:40px;letter-spacing:-1px" dominant-baseline="middle">MK</text>
+<path d="M27 3 L73 3 Q97 3 97 27 L97 73 Q97 97 73 97 L27 97 Q3 97 3 73 L3 27 Q3 3 27 3 Z" fill="none" stroke="#161320" stroke-width="2.4"></path>
+</svg>
