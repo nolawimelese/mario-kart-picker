@@ -140,41 +140,43 @@ export function Splash({
           compare stats, build tier lists — or let us spin you a pick.
         </p>
 
-        {/* loading bar */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 10,
-            marginTop: 6,
-          }}
-        >
+        {/* loading bar — only while the health check is in flight */}
+        {checking && (
           <div
             style={{
-              width: 400,
-              maxWidth: "80vw",
-              height: 14,
-              background: "var(--ink-100)",
-              border: "2px solid var(--ink-900)",
-              borderRadius: 999,
-              overflow: "hidden",
-              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 10,
+              marginTop: 6,
             }}
           >
-            <div className="mk-splash-bar" />
+            <div
+              style={{
+                width: 400,
+                maxWidth: "80vw",
+                height: 14,
+                background: "var(--ink-100)",
+                border: "2px solid var(--ink-900)",
+                borderRadius: 999,
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              <div className="mk-splash-bar" />
+            </div>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                color: "var(--ink-500)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              WARMING UP THE GRID…
+            </span>
           </div>
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 12,
-              color: "var(--ink-500)",
-              letterSpacing: "0.04em",
-            }}
-          >
-            WARMING UP THE GRID…
-          </span>
-        </div>
+        )}
 
         {(error || checkError) && (
           <div
