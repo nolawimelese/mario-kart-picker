@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TopNav } from "./design-system";
 import { Browse } from "./Browse";
 import { CoursePicker } from "./CoursePicker";
+import { SettingsPanel } from "./SettingsPanel";
 
 /**
  * MK Picker home page — TopNav plus the active section's content.
@@ -9,6 +10,7 @@ import { CoursePicker } from "./CoursePicker";
  */
 export function Home() {
   const [tab, setTab] = useState("browse");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
     <div
@@ -20,7 +22,8 @@ export function Home() {
         flexDirection: "column",
       }}
     >
-      <TopNav value={tab} onChange={setTab} />
+      <TopNav value={tab} onChange={setTab} onSettingsClick={() => setSettingsOpen(true)} />
+      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       {tab === "course-picker" ? (
         <CoursePicker />
       ) : tab === "browse" ? (

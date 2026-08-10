@@ -9,6 +9,7 @@ export interface TopNavProps extends Omit<React.HTMLAttributes<HTMLElement>, "on
   value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
+  onSettingsClick?: () => void;
 }
 
 const defaultTabs: TabItem[] = [
@@ -25,6 +26,7 @@ export function TopNav({
   value,
   defaultValue,
   onChange,
+  onSettingsClick,
   style,
   ...rest
 }: TopNavProps) {
@@ -43,7 +45,13 @@ export function TopNav({
     >
       <Logo variant="full" size={30} />
       <Tabs tabs={tabs} value={value} defaultValue={defaultValue ?? tabs[0]?.value} onChange={onChange} />
-      <IconButton icon="settings" variant="ghost" label="Settings" style={{ marginLeft: "auto" }} />
+      <IconButton
+        icon="settings"
+        variant="ghost"
+        label="Settings"
+        onClick={onSettingsClick}
+        style={{ marginLeft: "auto" }}
+      />
     </header>
   );
 }
