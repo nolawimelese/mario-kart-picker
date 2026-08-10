@@ -18,9 +18,17 @@ allowed_origins = [
     if origin.strip()
 ]
 
+# Netlify deploy previews use a per-PR subdomain (deploy-preview-<PR#>--mkpicker.netlify.app)
+# that can't be listed in ALLOWED_ORIGINS ahead of time, so match the pattern instead.
+allowed_origin_regex = os.environ.get(
+    "ALLOWED_ORIGIN_REGEX",
+    r"^https://deploy-preview-\d+--mkpicker\.netlify\.app$",
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=allowed_origin_regex,
     allow_methods=["*"],
     allow_headers=["*"],
 )
