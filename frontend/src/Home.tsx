@@ -17,7 +17,7 @@ export function Home() {
       style={{
         minHeight: "100vh",
         width: "100%",
-        background: "var(--cream)",
+        background: "var(--surface-cream)",
         display: "flex",
         flexDirection: "column",
       }}
@@ -40,7 +40,7 @@ export function Home() {
             padding: 40,
           }}
         >
-          <h1 style={{ fontSize: "clamp(40px, 6vw, 64px)", color: "var(--ink-900)", textAlign: "center" }}>
+          <h1 style={{ fontSize: "clamp(40px, 6vw, 64px)", color: "var(--text-strong)", textAlign: "center" }}>
             Welcome to the grid.
           </h1>
           <p style={{ fontSize: "var(--text-lg)", color: "var(--text-muted)", textAlign: "center" }}>

@@ -30,16 +30,16 @@ export function StatBar({ label, value = 0, max = 100, color = "var(--boost-500)
             fontSize: "var(--text-xs)",
             letterSpacing: "var(--tracking-caps)",
             textTransform: "uppercase",
-            color: "var(--ink-500)",
+            color: "var(--text-muted)",
           }}>
-            {icon && <Icon name={icon} size={13} color="var(--ink-400)" />}
+            {icon && <Icon name={icon} size={13} color="var(--text-muted)" />}
             {label}
           </span>
           <span style={{
             fontFamily: "var(--font-mono)",
             fontSize: "var(--text-xs)",
             fontWeight: 700,
-            color: "var(--ink-700)",
+            color: "var(--text-strong)",
           }}>{Math.round(value)}</span>
         </div>
       )}
@@ -47,8 +47,8 @@ export function StatBar({ label, value = 0, max = 100, color = "var(--boost-500)
         position: "relative",
         height: 12,
         borderRadius: "var(--radius-pill)",
-        background: "var(--ink-100)",
-        border: "var(--border-base) solid var(--ink-900)",
+        background: "var(--surface-sunken)",
+        border: "var(--border-base) solid var(--border-ink)",
         overflow: "hidden",
       }}>
         <div style={{

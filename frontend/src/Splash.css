@@ -45,7 +45,7 @@
 /* Floating item-box accent shapes (ink outline + pop shadow) */
 .mk-splash-shape {
   position: absolute;
-  border: 3px solid var(--ink-900);
+  border: 3px solid var(--border-ink);
   box-shadow: var(--shadow-pop-sm);
 }
 

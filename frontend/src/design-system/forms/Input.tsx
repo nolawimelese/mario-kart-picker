@@ -24,15 +24,15 @@ export function Input({ icon, size = "md", invalid = false, style, wrapStyle, ..
         gap: 8,
         height: heights[size] || heights.md,
         padding: icon ? "0 14px 0 12px" : "0 14px",
-        background: "var(--white)",
-        border: `var(--border-base) solid ${invalid ? "var(--shell-red)" : focused ? "var(--boost-500)" : "var(--ink-200)"}`,
+        background: "var(--surface-card)",
+        border: `var(--border-base) solid ${invalid ? "var(--shell-red)" : focused ? "var(--boost-500)" : "var(--border-subtle)"}`,
         borderRadius: "var(--radius-sm)",
         boxShadow: focused ? "0 0 0 3px var(--boost-100)" : "none",
         transition: "border-color var(--dur-fast), box-shadow var(--dur-fast)",
         ...wrapStyle,
       }}
     >
-      {icon && <Icon name={icon} size={18} color="var(--ink-400)" />}
+      {icon && <Icon name={icon} size={18} color="var(--text-muted)" />}
       <input
         {...rest}
         onFocus={(e) => { setFocused(true); rest.onFocus?.(e); }}
@@ -46,7 +46,7 @@ export function Input({ icon, size = "md", invalid = false, style, wrapStyle, ..
           fontFamily: "var(--font-body)",
           fontSize: "var(--text-md)",
           fontWeight: "var(--weight-semibold)",
-          color: "var(--ink-900)",
+          color: "var(--text-strong)",
           ...style,
         }}
       />

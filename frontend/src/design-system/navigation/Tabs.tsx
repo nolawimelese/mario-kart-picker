@@ -32,8 +32,8 @@ export function Tabs({ tabs = [], value, defaultValue, onChange, style, ...rest 
         display: "inline-flex",
         gap: 4,
         padding: 4,
-        background: "var(--ink-100)",
-        border: "var(--border-base) solid var(--ink-200)",
+        background: "var(--surface-sunken)",
+        border: "var(--border-base) solid var(--border-subtle)",
         borderRadius: "var(--radius-pill)",
         ...style,
       }}
@@ -52,10 +52,10 @@ export function Tabs({ tabs = [], value, defaultValue, onChange, style, ...rest 
               gap: 7,
               height: 36,
               padding: "0 16px",
-              border: isActive ? "var(--border-base) solid var(--ink-900)" : "var(--border-base) solid transparent",
+              border: isActive ? "var(--border-base) solid var(--border-ink)" : "var(--border-base) solid transparent",
               borderRadius: "var(--radius-pill)",
               background: isActive ? "var(--boost-500)" : "transparent",
-              color: isActive ? "#fff" : "var(--ink-600)",
+              color: isActive ? "#fff" : "var(--text-body)",
               fontFamily: "var(--font-ui)",
               fontWeight: "var(--weight-semibold)",
               fontSize: "var(--text-sm)",
@@ -73,8 +73,8 @@ export function Tabs({ tabs = [], value, defaultValue, onChange, style, ...rest 
                 fontSize: "var(--text-xs)",
                 padding: "1px 6px",
                 borderRadius: 999,
-                background: isActive ? "rgba(255,255,255,0.25)" : "var(--ink-200)",
-                color: isActive ? "#fff" : "var(--ink-600)",
+                background: isActive ? "rgba(255,255,255,0.25)" : "var(--border-subtle)",
+                color: isActive ? "#fff" : "var(--text-body)",
               }}>{t.count}</span>
             )}
           </button>

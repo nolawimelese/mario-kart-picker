@@ -44,3 +44,6 @@ export { Toast } from "./feedback/Toast";
 export type { ToastProps } from "./feedback/Toast";
 export { Tooltip } from "./feedback/Tooltip";
 export type { TooltipProps } from "./feedback/Tooltip";
+
+export { ThemeProvider, useTheme } from "./theme/ThemeContext";
+export type { Theme } from "./theme/ThemeContext";

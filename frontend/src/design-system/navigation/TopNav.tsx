@@ -3,6 +3,7 @@ import { Logo } from "../brand/Logo";
 import { IconButton } from "../core/IconButton";
 import { Tabs } from "./Tabs";
 import type { TabItem } from "./Tabs";
+import { useTheme } from "../theme/ThemeContext";
 
 export interface TopNavProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
   tabs?: TabItem[];
@@ -30,6 +31,7 @@ export function TopNav({
   style,
   ...rest
 }: TopNavProps) {
+  const { darkMode } = useTheme();
   return (
     <header
       style={{
@@ -37,13 +39,13 @@ export function TopNav({
         alignItems: "center",
         gap: 24,
         padding: "14px 32px",
-        background: "var(--cream)",
-        borderBottom: "var(--border-base) solid var(--ink-900)",
+        background: "var(--surface-cream)",
+        borderBottom: "var(--border-base) solid var(--border-ink)",
         ...style,
       }}
       {...rest}
     >
-      <Logo variant="full" size={30} />
+      <Logo variant="full" size={30} onDark={darkMode} />
       <Tabs tabs={tabs} value={value} defaultValue={defaultValue ?? tabs[0]?.value} onChange={onChange} />
       <IconButton
         icon="settings"

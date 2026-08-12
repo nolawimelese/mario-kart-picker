@@ -1,5 +1,5 @@
 import "./Splash.css";
-import { Logo, Button, Icon } from "./design-system";
+import { Logo, Button, Icon, useTheme } from "./design-system";
 
 export interface SplashProps {
   /** Called when the user clicks "Let's Race". */
@@ -26,12 +26,13 @@ export function Splash({
   checking,
   checkError,
 }: SplashProps) {
+  const { darkMode } = useTheme();
   return (
     <div
       style={{
         minHeight: "100vh",
         width: "100%",
-        background: "var(--cream)",
+        background: "var(--surface-cream)",
         overflow: "hidden",
         position: "relative",
         display: "flex",
@@ -114,12 +115,12 @@ export function Splash({
           Starting grid · Ready to roll
         </div>
 
-        <Logo variant="full" size={76} />
+        <Logo variant="full" size={76} onDark={darkMode} />
 
         <h1
           style={{
             fontSize: "clamp(56px, 9vw, 104px)",
-            color: "var(--ink-900)",
+            color: "var(--text-strong)",
             textAlign: "center",
             lineHeight: 0.98,
             marginTop: 4,
@@ -156,8 +157,8 @@ export function Splash({
                 width: 400,
                 maxWidth: "80vw",
                 height: 14,
-                background: "var(--ink-100)",
-                border: "2px solid var(--ink-900)",
+                background: "var(--surface-sunken)",
+                border: "2px solid var(--border-ink)",
                 borderRadius: 999,
                 overflow: "hidden",
                 position: "relative",
@@ -169,7 +170,7 @@ export function Splash({
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: 12,
-                color: "var(--ink-500)",
+                color: "var(--text-muted)",
                 letterSpacing: "0.04em",
               }}
             >
@@ -188,7 +189,7 @@ export function Splash({
               padding: "12px 16px",
               background: "var(--shell-red)",
               color: "#fff",
-              border: "var(--border-base) solid var(--ink-900)",
+              border: "var(--border-base) solid var(--border-ink)",
               borderRadius: "var(--radius-md)",
               boxShadow: "var(--shadow-pop-sm)",
               maxWidth: 460,

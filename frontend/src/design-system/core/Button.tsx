@@ -37,11 +37,11 @@ export function Button({
   const s = sizes[size] || sizes.md;
 
   const palettes = {
-    primary:   { bg: "var(--boost-500)", fg: "#fff", bd: "var(--ink-900)", pop: true },
-    secondary: { bg: "var(--drift-500)", fg: "#fff", bd: "var(--ink-900)", pop: true },
-    danger:    { bg: "var(--shell-red)", fg: "#fff", bd: "var(--ink-900)", pop: true },
-    outline:   { bg: "var(--white)", fg: "var(--ink-900)", bd: "var(--ink-900)", pop: true },
-    ghost:     { bg: "transparent", fg: "var(--ink-700)", bd: "transparent", pop: false },
+    primary:   { bg: "var(--boost-500)", fg: "#fff", bd: "var(--border-ink)", pop: true },
+    secondary: { bg: "var(--drift-500)", fg: "#fff", bd: "var(--border-ink)", pop: true },
+    danger:    { bg: "var(--shell-red)", fg: "#fff", bd: "var(--border-ink)", pop: true },
+    outline:   { bg: "var(--surface-card)", fg: "var(--text-strong)", bd: "var(--border-ink)", pop: true },
+    ghost:     { bg: "transparent", fg: "var(--text-body)", bd: "transparent", pop: false },
   };
   const p = palettes[variant] || palettes.primary;
 
@@ -74,7 +74,7 @@ export function Button({
   const interactive = !disabled && p.pop;
   const onDown = (e: React.MouseEvent<HTMLButtonElement>) => { if (interactive) { e.currentTarget.style.transform = "translate(2px,2px)"; e.currentTarget.style.boxShadow = "0 0 0 var(--ink-900)"; } };
   const onUp = (e: React.MouseEvent<HTMLButtonElement>) => { if (interactive) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "var(--shadow-pop-sm)"; } };
-  const onEnterGhost = (e: React.MouseEvent<HTMLButtonElement>) => { if (!disabled && variant === "ghost") e.currentTarget.style.background = "var(--ink-100)"; };
+  const onEnterGhost = (e: React.MouseEvent<HTMLButtonElement>) => { if (!disabled && variant === "ghost") e.currentTarget.style.background = "var(--surface-sunken)"; };
   const onLeaveGhost = (e: React.MouseEvent<HTMLButtonElement>) => { if (variant === "ghost") e.currentTarget.style.background = "transparent"; onUp(e); };
 
   return (

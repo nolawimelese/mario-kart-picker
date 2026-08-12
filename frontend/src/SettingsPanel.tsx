@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Dialog, Switch } from "./design-system";
+import { Dialog, Switch, useTheme } from "./design-system";
 
 export interface SettingsPanelProps {
   open: boolean;
@@ -8,7 +7,7 @@ export interface SettingsPanelProps {
 
 /** Settings dialog, opened from the TopNav gear icon. */
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, setDarkMode } = useTheme();
 
   return (
     <Dialog open={open} onClose={onClose} title="Settings" icon="settings">

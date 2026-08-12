@@ -43,14 +43,14 @@ const stepNum: CSSProperties = {
 const stepTitle: CSSProperties = {
   fontFamily: "var(--font-display)",
   fontSize: "var(--text-2xl)",
-  color: "var(--ink-900)",
+  color: "var(--text-strong)",
   margin: 0,
 };
 
 const stepHint: CSSProperties = {
   fontFamily: "var(--font-body)",
   fontSize: "var(--text-sm)",
-  color: "var(--ink-500)",
+  color: "var(--text-muted)",
   margin: "-8px 0 0",
 };
 
@@ -60,8 +60,8 @@ const posStyleBase: CSSProperties = {
   justifyContent: "center",
   height: 62,
   borderRadius: "var(--radius-md)",
-  border: "var(--border-base) solid var(--ink-900)",
-  background: "var(--white)",
+  border: "var(--border-base) solid var(--border-ink)",
+  background: "var(--surface-card)",
   boxShadow: "var(--shadow-pop-sm)",
   cursor: "pointer",
   transition:
@@ -259,7 +259,7 @@ export function CoursePicker() {
         position: "relative",
         flex: 1,
         width: "100%",
-        background: "var(--cream)",
+        background: "var(--surface-cream)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -293,7 +293,7 @@ export function CoursePicker() {
                 height: d.size,
                 borderRadius: d.radius,
                 background: d.bg,
-                border: "var(--border-base) solid var(--ink-900)",
+                border: "var(--border-base) solid var(--border-ink)",
                 boxShadow: "var(--shadow-pop-sm)",
                 opacity: d.opacity,
                 animation: `mkbob ${d.dur} var(--ease-in-out) infinite ${d.delay}`,
@@ -329,7 +329,7 @@ export function CoursePicker() {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "clamp(44px, 6vw, 68px)",
-              color: "var(--ink-900)",
+              color: "var(--text-strong)",
               margin: 0,
             }}
           >
@@ -358,7 +358,7 @@ export function CoursePicker() {
               padding: "12px 16px",
               background: "var(--shell-red)",
               color: "#fff",
-              border: "var(--border-base) solid var(--ink-900)",
+              border: "var(--border-base) solid var(--border-ink)",
               borderRadius: "var(--radius-md)",
               boxShadow: "var(--shadow-pop-sm)",
             }}
@@ -434,7 +434,7 @@ export function CoursePicker() {
                             fontFamily: "var(--font-display)",
                             fontSize: 24,
                             lineHeight: 1,
-                            color: selected ? "#fff" : "var(--ink-900)",
+                            color: selected ? "#fff" : isMedal ? "var(--ink-900)" : "var(--text-strong)",
                           }}
                         >
                           {n}
@@ -467,7 +467,7 @@ export function CoursePicker() {
                       marginLeft: "auto",
                       fontFamily: "var(--font-mono)",
                       fontSize: "var(--text-sm)",
-                      color: "var(--ink-500)",
+                      color: "var(--text-muted)",
                     }}
                   >
                     {ballot.length}/3
@@ -505,8 +505,8 @@ export function CoursePicker() {
                         left: 0,
                         right: 0,
                         zIndex: 20,
-                        background: "var(--white)",
-                        border: "var(--border-base) solid var(--ink-900)",
+                        background: "var(--surface-card)",
+                        border: "var(--border-base) solid var(--border-ink)",
                         borderRadius: "var(--radius-md)",
                         boxShadow: "var(--shadow-pop)",
                         overflow: "hidden",
@@ -517,7 +517,7 @@ export function CoursePicker() {
                       {searchResults.map((t, i) => {
                         const isTop = i === 0;
                         const rest = isTop
-                          ? "var(--ink-100)"
+                          ? "var(--surface-sunken)"
                           : "transparent";
                         return (
                         <button
@@ -526,7 +526,7 @@ export function CoursePicker() {
                           onClick={() => addTrack(t)}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.background =
-                              "var(--ink-200)")
+                              "var(--border-subtle)")
                           }
                           onMouseLeave={(e) =>
                             (e.currentTarget.style.background = rest)
@@ -550,7 +550,7 @@ export function CoursePicker() {
                               height: 34,
                               borderRadius: "var(--radius-xs)",
                               background: t.headerColor,
-                              border: "var(--border-base) solid var(--ink-900)",
+                              border: "var(--border-base) solid var(--border-ink)",
                               flexShrink: 0,
                             }}
                           />
@@ -568,7 +568,7 @@ export function CoursePicker() {
                                 fontFamily: "var(--font-ui)",
                                 fontWeight: 600,
                                 fontSize: "var(--text-md)",
-                                color: "var(--ink-900)",
+                                color: "var(--text-strong)",
                               }}
                             >
                               {t.name}
@@ -577,7 +577,7 @@ export function CoursePicker() {
                               style={{
                                 fontFamily: "var(--font-body)",
                                 fontSize: "var(--text-xs)",
-                                color: "var(--ink-500)",
+                                color: "var(--text-muted)",
                               }}
                             >
                               {t.cup} · {t.laps} laps
@@ -615,8 +615,8 @@ export function CoursePicker() {
                             flexDirection: "column",
                             gap: 10,
                             padding: 14,
-                            background: "var(--white)",
-                            border: "var(--border-base) solid var(--ink-900)",
+                            background: "var(--surface-card)",
+                            border: "var(--border-base) solid var(--border-ink)",
                             borderRadius: "var(--radius-md)",
                             boxShadow: "var(--shadow-pop-sm)",
                           }}
@@ -626,7 +626,7 @@ export function CoursePicker() {
                               height: 10,
                               borderRadius: "var(--radius-pill)",
                               background: t.headerColor,
-                              border: "var(--border-base) solid var(--ink-900)",
+                              border: "var(--border-base) solid var(--border-ink)",
                             }}
                           />
                           <span
@@ -634,7 +634,7 @@ export function CoursePicker() {
                               fontFamily: "var(--font-ui)",
                               fontWeight: 600,
                               fontSize: "var(--text-md)",
-                              color: "var(--ink-900)",
+                              color: "var(--text-strong)",
                               lineHeight: 1.15,
                             }}
                           >
@@ -644,7 +644,7 @@ export function CoursePicker() {
                             style={{
                               fontFamily: "var(--font-mono)",
                               fontSize: "var(--text-2xs)",
-                              color: "var(--ink-500)",
+                              color: "var(--text-muted)",
                             }}
                           >
                             {t.cup}
@@ -674,16 +674,16 @@ export function CoursePicker() {
                           justifyContent: "center",
                           gap: 6,
                           minHeight: 110,
-                          border: "var(--border-base) dashed var(--ink-300)",
+                          border: "var(--border-base) dashed var(--border-strong)",
                           borderRadius: "var(--radius-md)",
-                          background: "var(--ink-50)",
+                          background: "var(--surface-sunken)",
                         }}
                       >
                         <span
                           style={{
                             fontFamily: "var(--font-display)",
                             fontSize: "var(--text-xl)",
-                            color: "var(--ink-300)",
+                            color: "var(--text-muted)",
                           }}
                         >
                           {i + 1}
@@ -692,7 +692,7 @@ export function CoursePicker() {
                           style={{
                             fontFamily: "var(--font-ui)",
                             fontSize: "var(--text-xs)",
-                            color: "var(--ink-400)",
+                            color: "var(--text-muted)",
                             letterSpacing: "var(--tracking-caps)",
                             textTransform: "uppercase",
                           }}
@@ -729,7 +729,7 @@ export function CoursePicker() {
                     style={{
                       fontFamily: "var(--font-body)",
                       fontSize: "var(--text-sm)",
-                      color: "var(--ink-400)",
+                      color: "var(--text-muted)",
                     }}
                   >
                     {position == null && ballot.length < 3
@@ -767,7 +767,7 @@ export function CoursePicker() {
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "clamp(28px, 4vw, 40px)",
-                  color: "var(--ink-900)",
+                  color: "var(--text-strong)",
                   textAlign: "center",
                   margin: 0,
                 }}
@@ -778,7 +778,7 @@ export function CoursePicker() {
                 style={{
                   fontFamily: "var(--font-body)",
                   fontSize: "var(--text-md)",
-                  color: "var(--ink-500)",
+                  color: "var(--text-muted)",
                   textAlign: "center",
                   maxWidth: 460,
                   margin: 0,
@@ -792,8 +792,8 @@ export function CoursePicker() {
                   width: "min(420px, 90%)",
                   height: 14,
                   borderRadius: "var(--radius-pill)",
-                  background: "var(--ink-100)",
-                  border: "var(--border-base) solid var(--ink-900)",
+                  background: "var(--surface-sunken)",
+                  border: "var(--border-base) solid var(--border-ink)",
                   overflow: "hidden",
                 }}
               >
@@ -850,7 +850,7 @@ export function CoursePicker() {
                   fontFamily: "var(--font-ui)",
                   fontWeight: 600,
                   fontSize: "var(--text-sm)",
-                  color: "var(--ink-500)",
+                  color: "var(--text-muted)",
                 }}
               >
                 You finished {ordinal(position as number)} · voting between{" "}
@@ -865,7 +865,7 @@ export function CoursePicker() {
                   position: "relative",
                   height: 96,
                   background: top.track.headerColor,
-                  borderBottom: "var(--border-base) solid var(--ink-900)",
+                  borderBottom: "var(--border-base) solid var(--border-ink)",
                   borderTopLeftRadius: "calc(var(--radius-lg) - 2px)",
                   borderTopRightRadius: "calc(var(--radius-lg) - 2px)",
                   display: "flex",
@@ -922,7 +922,7 @@ export function CoursePicker() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: "var(--text-3xl)",
-                        color: "var(--ink-900)",
+                        color: "var(--text-strong)",
                         lineHeight: 1.05,
                         margin: 0,
                       }}
@@ -933,7 +933,7 @@ export function CoursePicker() {
                       style={{
                         fontFamily: "var(--font-body)",
                         fontSize: "var(--text-sm)",
-                        color: "var(--ink-500)",
+                        color: "var(--text-muted)",
                         margin: "4px 0 0",
                       }}
                     >
@@ -946,7 +946,7 @@ export function CoursePicker() {
                         fontFamily: "var(--font-mono)",
                         fontSize: "var(--text-4xl)",
                         fontWeight: 700,
-                        color: "var(--ink-900)",
+                        color: "var(--text-strong)",
                         lineHeight: 1,
                       }}
                     >
@@ -958,7 +958,7 @@ export function CoursePicker() {
                         fontSize: "var(--text-2xs)",
                         letterSpacing: "var(--tracking-caps)",
                         textTransform: "uppercase",
-                        color: "var(--ink-400)",
+                        color: "var(--text-muted)",
                       }}
                     >
                       Pick score
@@ -983,7 +983,7 @@ export function CoursePicker() {
                     gap: 12,
                     padding: "16px 18px",
                     background: "var(--boost-50)",
-                    border: "var(--border-base) solid var(--ink-900)",
+                    border: "var(--border-base) solid var(--border-ink)",
                     borderRadius: "var(--radius-md)",
                   }}
                 >
@@ -1013,7 +1013,7 @@ export function CoursePicker() {
               <div
                 style={{ display: "flex", flexDirection: "column", gap: 12 }}
               >
-                <span style={{ ...eyebrow, color: "var(--ink-500)" }}>
+                <span style={{ ...eyebrow, color: "var(--text-muted)" }}>
                   The other picks
                 </span>
                 {runners.map(({ rec, track }, i) => (
@@ -1024,8 +1024,8 @@ export function CoursePicker() {
                       alignItems: "center",
                       gap: 16,
                       padding: "16px 18px",
-                      background: "var(--white)",
-                      border: "var(--border-base) solid var(--ink-900)",
+                      background: "var(--surface-card)",
+                      border: "var(--border-base) solid var(--border-ink)",
                       borderRadius: "var(--radius-md)",
                       boxShadow: "var(--shadow-pop-sm)",
                     }}
@@ -1034,7 +1034,7 @@ export function CoursePicker() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: "var(--text-xl)",
-                        color: "var(--ink-300)",
+                        color: "var(--text-muted)",
                         width: 28,
                         textAlign: "center",
                         flexShrink: 0,
@@ -1048,7 +1048,7 @@ export function CoursePicker() {
                         height: 40,
                         borderRadius: "var(--radius-xs)",
                         background: track.headerColor,
-                        border: "var(--border-base) solid var(--ink-900)",
+                        border: "var(--border-base) solid var(--border-ink)",
                         flexShrink: 0,
                       }}
                     />
@@ -1058,7 +1058,7 @@ export function CoursePicker() {
                           fontFamily: "var(--font-ui)",
                           fontWeight: 600,
                           fontSize: "var(--text-md)",
-                          color: "var(--ink-900)",
+                          color: "var(--text-strong)",
                         }}
                       >
                         {track.name}
@@ -1067,7 +1067,7 @@ export function CoursePicker() {
                         style={{
                           fontFamily: "var(--font-body)",
                           fontSize: "var(--text-sm)",
-                          color: "var(--ink-500)",
+                          color: "var(--text-muted)",
                         }}
                       >
                         {rec.reason}
@@ -1079,7 +1079,7 @@ export function CoursePicker() {
                           fontFamily: "var(--font-mono)",
                           fontSize: "var(--text-xl)",
                           fontWeight: 700,
-                          color: "var(--ink-600)",
+                          color: "var(--text-body)",
                         }}
                       >
                         {pickScore(rec.score)}
@@ -1135,7 +1135,7 @@ export function CoursePicker() {
                 padding: "14px 18px",
                 background:
                   winnerRank === 0 ? "var(--boost-50)" : "var(--coin-100)",
-                border: "var(--border-base) solid var(--ink-900)",
+                border: "var(--border-base) solid var(--border-ink)",
                 borderRadius: "var(--radius-md)",
                 boxShadow: "var(--shadow-pop-sm)",
               }}
@@ -1176,7 +1176,7 @@ export function CoursePicker() {
                   position: "relative",
                   height: 96,
                   background: winner.track.headerColor,
-                  borderBottom: "var(--border-base) solid var(--ink-900)",
+                  borderBottom: "var(--border-base) solid var(--border-ink)",
                   borderTopLeftRadius: "calc(var(--radius-lg) - 2px)",
                   borderTopRightRadius: "calc(var(--radius-lg) - 2px)",
                   display: "flex",
@@ -1233,7 +1233,7 @@ export function CoursePicker() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: "var(--text-3xl)",
-                        color: "var(--ink-900)",
+                        color: "var(--text-strong)",
                         lineHeight: 1.05,
                         margin: 0,
                       }}
@@ -1244,7 +1244,7 @@ export function CoursePicker() {
                       style={{
                         fontFamily: "var(--font-body)",
                         fontSize: "var(--text-sm)",
-                        color: "var(--ink-500)",
+                        color: "var(--text-muted)",
                         margin: "4px 0 0",
                       }}
                     >
@@ -1257,7 +1257,7 @@ export function CoursePicker() {
                         fontFamily: "var(--font-mono)",
                         fontSize: "var(--text-4xl)",
                         fontWeight: 700,
-                        color: "var(--ink-900)",
+                        color: "var(--text-strong)",
                         lineHeight: 1,
                       }}
                     >
@@ -1269,7 +1269,7 @@ export function CoursePicker() {
                         fontSize: "var(--text-2xs)",
                         letterSpacing: "var(--tracking-caps)",
                         textTransform: "uppercase",
-                        color: "var(--ink-400)",
+                        color: "var(--text-muted)",
                       }}
                     >
                       Pick score
@@ -1304,7 +1304,7 @@ export function CoursePicker() {
                         style={{
                           fontFamily: "var(--font-display)",
                           fontSize: "var(--text-lg)",
-                          color: "var(--ink-900)",
+                          color: "var(--text-strong)",
                         }}
                       >
                         How to play it
@@ -1339,7 +1339,7 @@ export function CoursePicker() {
                             style={{
                               fontFamily: "var(--font-body)",
                               fontSize: "var(--text-sm)",
-                              color: "var(--ink-700)",
+                              color: "var(--text-body)",
                               lineHeight: 1.5,
                             }}
                           >
@@ -1354,7 +1354,7 @@ export function CoursePicker() {
                     style={{
                       fontFamily: "var(--font-body)",
                       fontSize: "var(--text-sm)",
-                      color: "var(--ink-500)",
+                      color: "var(--text-muted)",
                       margin: 0,
                     }}
                   >
@@ -1408,7 +1408,7 @@ export function CoursePicker() {
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: "var(--text-sm)",
-                color: "var(--ink-500)",
+                color: "var(--text-muted)",
                 margin: "0 0 4px",
                 fontWeight: 500,
               }}
@@ -1425,20 +1425,20 @@ export function CoursePicker() {
                   type="button"
                   onClick={() => chooseWinner(rec.trackId)}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "var(--ink-100)")
+                    (e.currentTarget.style.background = "var(--surface-sunken)")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background = isWinner
                       ? "var(--boost-50)"
-                      : "var(--white)")
+                      : "var(--surface-card)")
                   }
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: 14,
                     padding: "12px 14px",
-                    background: isWinner ? "var(--boost-50)" : "var(--white)",
-                    border: "var(--border-base) solid var(--ink-900)",
+                    background: isWinner ? "var(--boost-50)" : "var(--surface-card)",
+                    border: "var(--border-base) solid var(--border-ink)",
                     borderRadius: "var(--radius-md)",
                     boxShadow: "var(--shadow-pop-sm)",
                     cursor: "pointer",
@@ -1451,7 +1451,7 @@ export function CoursePicker() {
                       height: 40,
                       borderRadius: "var(--radius-xs)",
                       background: track.headerColor,
-                      border: "var(--border-base) solid var(--ink-900)",
+                      border: "var(--border-base) solid var(--border-ink)",
                       flexShrink: 0,
                     }}
                   />
@@ -1469,7 +1469,7 @@ export function CoursePicker() {
                         fontFamily: "var(--font-ui)",
                         fontWeight: 600,
                         fontSize: "var(--text-md)",
-                        color: "var(--ink-900)",
+                        color: isWinner ? "var(--ink-900)" : "var(--text-strong)",
                       }}
                     >
                       {track.name}
@@ -1478,7 +1478,7 @@ export function CoursePicker() {
                       style={{
                         fontFamily: "var(--font-body)",
                         fontSize: "var(--text-xs)",
-                        color: "var(--ink-500)",
+                        color: isWinner ? "var(--ink-700)" : "var(--text-muted)",
                       }}
                     >
                       {track.cup} · {track.laps} laps
@@ -1492,7 +1492,7 @@ export function CoursePicker() {
                   <Icon
                     name="chevron-right"
                     size={20}
-                    color="var(--ink-400)"
+                    color="var(--text-muted)"
                   />
                 </button>
               );

@@ -35,9 +35,9 @@ export function Select({ options = [], size = "md", style, ...rest }: SelectProp
           fontFamily: "var(--font-ui)",
           fontWeight: "var(--weight-medium)",
           fontSize: "var(--text-md)",
-          color: "var(--ink-900)",
-          background: "var(--white)",
-          border: `var(--border-base) solid ${focused ? "var(--boost-500)" : "var(--ink-200)"}`,
+          color: "var(--text-strong)",
+          background: "var(--surface-card)",
+          border: `var(--border-base) solid ${focused ? "var(--boost-500)" : "var(--border-subtle)"}`,
           borderRadius: "var(--radius-sm)",
           boxShadow: focused ? "0 0 0 3px var(--boost-100)" : "none",
           cursor: "pointer",
@@ -52,7 +52,7 @@ export function Select({ options = [], size = "md", style, ...rest }: SelectProp
         })}
       </select>
       <span style={{ position: "absolute", right: 12, pointerEvents: "none", display: "grid" }}>
-        <Icon name="chevron-down" size={18} color="var(--ink-500)" />
+        <Icon name="chevron-down" size={18} color="var(--text-muted)" />
       </span>
     </div>
   );

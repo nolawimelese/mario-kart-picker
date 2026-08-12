@@ -36,8 +36,8 @@ export function Avatar({ name = "", src, size = 40, color = "var(--star-purple)"
         fontWeight: "var(--weight-bold)",
         fontSize: size * 0.4,
         overflow: "hidden",
-        border: "var(--border-base) solid var(--ink-900)",
-        boxShadow: ring ? "0 0 0 2px var(--white), 0 0 0 4px var(--mushroom)" : "none",
+        border: "var(--border-base) solid var(--border-ink)",
+        boxShadow: ring ? "0 0 0 2px var(--surface-card), 0 0 0 4px var(--mushroom)" : "none",
         flexShrink: 0,
         ...style,
       }}
