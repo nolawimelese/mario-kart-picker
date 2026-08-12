@@ -75,7 +75,7 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
 > - [x] add settings panel
 >   - [ ] add dark mode
 >     - [ ] add dark mode palette
->     - [ ] add switch in panel
+>     - [x] add switch in panel
 >
 > </details>
 

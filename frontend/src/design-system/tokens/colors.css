@@ -91,3 +91,33 @@
   --border-ink:    var(--ink-900);   /* heavy outline used on arcade cards/buttons */
   --focus-ring:    var(--drift-500);
 }
+
+/* ---- Dark palette -------------------------------------------------------
+   Overrides the semantic layer only; brand ramps, item-box accents, the tier
+   scale, and the raw ink ramp stay as-is since they already read fine on
+   dark surfaces and some components reference the ink ramp directly for
+   fixed stylistic purposes (e.g. the comic-style ink outline).
+   Inert until something sets data-theme="dark" — nothing does yet. */
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --surface-page:    #161320;   /* --ink-900, reused as dark bg */
+  --surface-card:    #221e30;   /* --ink-800 */
+  --surface-raised:  #322c42;   /* --ink-700, one step up for elevation */
+  --surface-sunken:  #0f0d16;   /* darker than page */
+  --surface-inverse: #faf8fc;   /* --ink-50 — inverse of a dark page is light */
+  --surface-cream:   #2a2318;   /* muted warm-dark, keeps the "cream" role's warmth */
+
+  /* Text */
+  --text-strong:  #f2eff6;   /* --ink-50 */
+  --text-body:    #c8c2d2;   /* --ink-300 */
+  --text-muted:   #a79fb5;   /* lightened for contrast on dark surfaces */
+  --text-inverse: #161320;   /* --ink-900 */
+  --text-on-brand:#ffffff;
+  --text-link:    #5e9dff;   /* --drift-400, lighter than the light-mode drift-600 */
+
+  /* Borders */
+  --border-subtle: #322c42;   /* --ink-700 */
+  --border-strong: #4a4359;   /* --ink-600 */
+  --border-ink:    #f2eff6;   /* flipped light so heavy outlines stay visible on dark cards */
+  --focus-ring:    #5e9dff;   /* --drift-400, brighter for dark-background contrast */
+}
