@@ -9,15 +9,32 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+const STORAGE_KEY = "mkpicker:theme";
+
+/** Reads the saved theme; falls back to light if unset or if storage is unavailable. */
+function readStoredTheme(): Theme {
+  try {
+    return localStorage.getItem(STORAGE_KEY) === "dark" ? "dark" : "light";
+  } catch {
+    return "light";
+  }
+}
+
 /** Applies the active theme to <html data-theme> so tokens/colors.css can react to it. */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(readStoredTheme);
 
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.dataset.theme = "dark";
     } else {
       delete document.documentElement.dataset.theme;
+    }
+    // Storage can throw in private-browsing modes — the theme still applies for this session.
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+      /* preference just won't persist */
     }
   }, [theme]);
 
