@@ -19,12 +19,14 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   return (
     <Dialog open={open} onClose={onClose} title="Settings" icon="settings">
       {/* Not a <label>: Tabs renders buttons, so the group is named via aria-label instead. */}
-      <div style={{
-        marginBottom: 8,
-        fontSize: "var(--text-md)",
-        fontWeight: "var(--weight-semibold)",
-        color: "var(--text-strong)",
-      }}>
+      <div
+        style={{
+          marginBottom: 8,
+          fontSize: "var(--text-md)",
+          fontWeight: "var(--weight-semibold)",
+          color: "var(--text-strong)",
+        }}
+      >
         Visuals
       </div>
       <Tabs
@@ -34,14 +36,14 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
         role="group"
         aria-label="Visuals"
       />
-      <p style={{
-        margin: "8px 0 0",
-        fontSize: "var(--text-sm)",
-        fontWeight: 600,
-        color: "var(--text-muted)",
-      }}>
-        Auto matches your system light/dark setting.
-      </p>
+      <p
+        style={{
+          margin: "8px 0 0",
+          fontSize: "var(--text-sm)",
+          fontWeight: 600,
+          color: "var(--text-muted)",
+        }}
+      ></p>
     </Dialog>
   );
 }
