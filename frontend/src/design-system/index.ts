@@ -46,4 +46,4 @@ export { Tooltip } from "./feedback/Tooltip";
 export type { TooltipProps } from "./feedback/Tooltip";
 
 export { ThemeProvider, useTheme } from "./theme/ThemeContext";
-export type { Theme } from "./theme/ThemeContext";
+export type { Theme, ThemePreference } from "./theme/ThemeContext";

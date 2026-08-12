@@ -1,10 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type Theme = "light" | "dark";
+/** What the user asked for: a fixed theme, or "system" to follow the OS. */
+export type ThemePreference = Theme | "system";
 
 interface ThemeContextValue {
+  /** The resolved theme — what's actually on screen. */
   darkMode: boolean;
-  setDarkMode: (next: boolean) => void;
+  /** What the user picked; "system" while the theme follows the OS. */
+  preference: ThemePreference;
+  setPreference: (next: ThemePreference) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -13,13 +18,22 @@ const STORAGE_KEY = "mkpicker:theme";
 
 const DARK_QUERY = "(prefers-color-scheme: dark)";
 
-/** Reads the saved theme, or null if the user has never picked one (or storage is unavailable). */
-function readStoredTheme(): Theme | null {
+/** Reads the saved preference, or null if the user has never picked one (or storage is unavailable). */
+function readStoredPreference(): ThemePreference | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === "dark" || stored === "light" ? stored : null;
+    return stored === "dark" || stored === "light" || stored === "system" ? stored : null;
   } catch {
     return null;
+  }
+}
+
+/** Storage can throw in private-browsing modes — the theme still applies for this session. */
+function storePreference(preference: ThemePreference) {
+  try {
+    localStorage.setItem(STORAGE_KEY, preference);
+  } catch {
+    /* preference just won't persist */
   }
 }
 
@@ -30,7 +44,11 @@ function readSystemTheme(): Theme {
 
 /** Applies the active theme to <html data-theme> so tokens/colors.css can react to it. */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => readStoredTheme() ?? readSystemTheme());
+  // Never picked one before → follow the system, same as the old implicit behaviour.
+  const [preference, setPreferenceState] = useState<ThemePreference>(() => readStoredPreference() ?? "system");
+  const [systemTheme, setSystemTheme] = useState<Theme>(readSystemTheme);
+
+  const theme: Theme = preference === "system" ? systemTheme : preference;
 
   useEffect(() => {
     if (theme === "dark") {
@@ -40,27 +58,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [theme]);
 
-  // Until the user picks a theme themselves, track the system preference live.
+  // Track the OS preference live; it only reaches the page while preference is "system".
   useEffect(() => {
-    if (readStoredTheme() !== null) return;
     const media = window.matchMedia?.(DARK_QUERY);
     if (!media) return;
-    const onChange = (e: MediaQueryListEvent) => setTheme(e.matches ? "dark" : "light");
+    const onChange = (e: MediaQueryListEvent) => setSystemTheme(e.matches ? "dark" : "light");
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
-  }, [theme]);
+  }, []);
 
   const value: ThemeContextValue = {
     darkMode: theme === "dark",
-    setDarkMode: (next) => {
-      const picked: Theme = next ? "dark" : "light";
-      setTheme(picked);
-      // Storage can throw in private-browsing modes — the theme still applies for this session.
-      try {
-        localStorage.setItem(STORAGE_KEY, picked);
-      } catch {
-        /* preference just won't persist */
-      }
+    preference,
+    setPreference: (next) => {
+      setPreferenceState(next);
+      storePreference(next);
     },
   };
 
