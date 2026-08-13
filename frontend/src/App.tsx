@@ -9,7 +9,7 @@ import { fetchHealth } from "./api/health";
 function App() {
   const [view, setView] = useState<"splash" | "home">("splash");
 
-  const { isPending, isError } = useQuery({
+  const { isError } = useQuery({
     queryKey: ["tracks"],
     queryFn: fetchTracks,
   });
@@ -21,7 +21,6 @@ function App() {
 
   return view === "splash" ? (
     <Splash
-      loading={isPending}
       error={isError}
       checking={healthCheck.isPending}
       checkError={healthCheck.isError}

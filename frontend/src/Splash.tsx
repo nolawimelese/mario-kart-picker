@@ -4,8 +4,6 @@ import { Logo, Button, Icon } from "./design-system";
 export interface SplashProps {
   /** Called when the user clicks "Let's Race". */
   onStart?: () => void;
-  /** Whether the track catalog is still being fetched. */
-  loading?: boolean;
   /** Whether the track catalog fetch failed. */
   error?: boolean;
   /** Whether the "Let's Race" health check is in flight. */
@@ -21,7 +19,6 @@ export interface SplashProps {
  */
 export function Splash({
   onStart,
-  loading,
   error,
   checking,
   checkError,
@@ -214,7 +211,7 @@ export function Splash({
             variant="primary"
             size="lg"
             iconRight="flag"
-            disabled={(loading && !error) || checking}
+            disabled={checking}
             onClick={onStart}
           >
             Let's Race
