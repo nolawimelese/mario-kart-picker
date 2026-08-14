@@ -156,7 +156,7 @@ export function Browse() {
   function toggleTrait(trait: string) {
     setSelectedTraits((prev) => {
       const next = new Set(prev);
-      next.has(trait) ? next.delete(trait) : next.add(trait);
+      if (next.has(trait)) next.delete(trait); else next.add(trait);
       return next;
     });
   }
@@ -164,7 +164,7 @@ export function Browse() {
   function toggleTerrain(terrain: string) {
     setSelectedTerrains((prev) => {
       const next = new Set(prev);
-      next.has(terrain) ? next.delete(terrain) : next.add(terrain);
+      if (next.has(terrain)) next.delete(terrain); else next.add(terrain);
       return next;
     });
   }
