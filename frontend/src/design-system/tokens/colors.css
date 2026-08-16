@@ -76,6 +76,8 @@
   --surface-sunken:  var(--ink-100);
   --surface-inverse: var(--ink-900);
   --surface-cream:   var(--cream);
+  --surface-accent-soft:    var(--boost-50);   /* tinted callout / selected-row fill */
+  --surface-highlight-soft: var(--coin-100);   /* the "not our pick" variant */
 
   /* Text */
   --text-strong:  var(--ink-900);
@@ -97,7 +99,7 @@
    scale, and the raw ink ramp stay as-is since they already read fine on
    dark surfaces and some components reference the ink ramp directly for
    fixed stylistic purposes (e.g. the comic-style ink outline).
-   Inert until something sets data-theme="dark" — nothing does yet. */
+   Applied by ThemeContext, which sets data-theme="dark" on the document element. */
 :root[data-theme="dark"] {
   /* Surfaces */
   --surface-page:    #161320;   /* --ink-900, reused as dark bg */
@@ -106,6 +108,8 @@
   --surface-sunken:  #0f0d16;   /* darker than page */
   --surface-inverse: #faf8fc;   /* --ink-50 — inverse of a dark page is light */
   --surface-cream:   #2a2318;   /* muted warm-dark, keeps the "cream" role's warmth */
+  --surface-accent-soft:    #2a1c12;   /* warm orange-dark, boost-tinted sibling of --surface-cream */
+  --surface-highlight-soft: #2e2410;   /* warm yellow-dark, coin-tinted */
 
   /* Text */
   --text-strong:  #f2eff6;   /* --ink-50 */

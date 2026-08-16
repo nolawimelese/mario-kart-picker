@@ -982,7 +982,7 @@ export function CoursePicker() {
                     display: "flex",
                     gap: 12,
                     padding: "16px 18px",
-                    background: "var(--boost-50)",
+                    background: "var(--surface-accent-soft)",
                     border: "var(--border-base) solid var(--border-ink)",
                     borderRadius: "var(--radius-md)",
                   }}
@@ -997,7 +997,7 @@ export function CoursePicker() {
                     style={{
                       fontFamily: "var(--font-body)",
                       fontSize: "var(--text-md)",
-                      color: "var(--ink-800)",
+                      color: "var(--text-strong)",
                       lineHeight: 1.5,
                       margin: 0,
                     }}
@@ -1134,7 +1134,9 @@ export function CoursePicker() {
                 alignItems: "center",
                 padding: "14px 18px",
                 background:
-                  winnerRank === 0 ? "var(--boost-50)" : "var(--coin-100)",
+                  winnerRank === 0
+                    ? "var(--surface-accent-soft)"
+                    : "var(--surface-highlight-soft)",
                 border: "var(--border-base) solid var(--border-ink)",
                 borderRadius: "var(--radius-md)",
                 boxShadow: "var(--shadow-pop-sm)",
@@ -1151,7 +1153,7 @@ export function CoursePicker() {
                   fontFamily: "var(--font-ui)",
                   fontWeight: 600,
                   fontSize: "var(--text-md)",
-                  color: "var(--ink-800)",
+                  color: "var(--text-strong)",
                   lineHeight: 1.4,
                 }}
               >
@@ -1429,7 +1431,7 @@ export function CoursePicker() {
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background = isWinner
-                      ? "var(--boost-50)"
+                      ? "var(--surface-accent-soft)"
                       : "var(--surface-card)")
                   }
                   style={{
@@ -1437,7 +1439,9 @@ export function CoursePicker() {
                     alignItems: "center",
                     gap: 14,
                     padding: "12px 14px",
-                    background: isWinner ? "var(--boost-50)" : "var(--surface-card)",
+                    background: isWinner
+                      ? "var(--surface-accent-soft)"
+                      : "var(--surface-card)",
                     border: "var(--border-base) solid var(--border-ink)",
                     borderRadius: "var(--radius-md)",
                     boxShadow: "var(--shadow-pop-sm)",
@@ -1469,7 +1473,7 @@ export function CoursePicker() {
                         fontFamily: "var(--font-ui)",
                         fontWeight: 600,
                         fontSize: "var(--text-md)",
-                        color: isWinner ? "var(--ink-900)" : "var(--text-strong)",
+                        color: "var(--text-strong)",
                       }}
                     >
                       {track.name}
@@ -1478,7 +1482,7 @@ export function CoursePicker() {
                       style={{
                         fontFamily: "var(--font-body)",
                         fontSize: "var(--text-xs)",
-                        color: isWinner ? "var(--ink-700)" : "var(--text-muted)",
+                        color: "var(--text-muted)",
                       }}
                     >
                       {track.cup} · {track.laps} laps
