@@ -80,6 +80,15 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
 > </details>
 
 > <details>
+> <summary>Footer</summary>
+>
+> - [ ] add footer
+>   - [ ] add copyright disclosure (or lack of)
+>   - [ ] data collection disclosure (or lack of)
+>
+> </details>
+
+> <details>
 > <summary>Mobile</summary>
 >
 > - [ ] add mobile portrait mode support
