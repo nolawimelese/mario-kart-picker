@@ -22,7 +22,7 @@ export function Checkbox({ checked = false, onChange, label, disabled = false, s
         fontFamily: "var(--font-body)",
         fontWeight: "var(--weight-semibold)",
         fontSize: "var(--text-md)",
-        color: "var(--ink-800)",
+        color: "var(--text-strong)",
         userSelect: "none",
         ...style,
       }}
@@ -36,8 +36,8 @@ export function Checkbox({ checked = false, onChange, label, disabled = false, s
           width: 24,
           height: 24,
           borderRadius: "var(--radius-xs)",
-          background: checked ? "var(--boost-500)" : "var(--white)",
-          border: "var(--border-base) solid var(--ink-900)",
+          background: checked ? "var(--boost-500)" : "var(--surface-card)",
+          border: "var(--border-base) solid var(--border-ink)",
           boxShadow: "var(--shadow-pop-sm)",
           transition: "background var(--dur-fast)",
         }}

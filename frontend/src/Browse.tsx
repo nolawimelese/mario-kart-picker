@@ -24,7 +24,7 @@ const eyebrow: CSSProperties = {
   fontSize: "var(--text-xs)",
   letterSpacing: "var(--tracking-caps)",
   textTransform: "uppercase",
-  color: "var(--ink-500)",
+  color: "var(--text-muted)",
 };
 
 interface TrackCardProps {
@@ -40,7 +40,7 @@ function TrackCard({ track }: TrackCardProps) {
           position: "relative",
           height: 110,
           background: track.headerColor,
-          borderBottom: "var(--border-base) solid var(--ink-900)",
+          borderBottom: "var(--border-base) solid var(--border-ink)",
           borderTopLeftRadius: "calc(var(--radius-lg) - 2px)",
           borderTopRightRadius: "calc(var(--radius-lg) - 2px)",
         }}
@@ -58,7 +58,7 @@ function TrackCard({ track }: TrackCardProps) {
               padding: "0 9px",
               background: "var(--coin-500)",
               color: "var(--ink-900)",
-              border: "2px solid var(--ink-900)",
+              border: "2px solid var(--border-ink)",
               borderRadius: "var(--radius-pill)",
               boxShadow: "var(--shadow-pop-sm)",
               fontFamily: "var(--font-ui)",
@@ -85,7 +85,7 @@ function TrackCard({ track }: TrackCardProps) {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "var(--text-xl)",
-              color: "var(--ink-900)",
+              color: "var(--text-strong)",
               margin: 0,
             }}
           >
@@ -95,7 +95,7 @@ function TrackCard({ track }: TrackCardProps) {
             style={{
               fontFamily: "var(--font-body)",
               fontSize: "var(--text-sm)",
-              color: "var(--ink-500)",
+              color: "var(--text-muted)",
               margin: "4px 0 0",
             }}
           >
@@ -124,7 +124,7 @@ function TrackCard({ track }: TrackCardProps) {
           style={{
             fontFamily: "var(--font-body)",
             fontSize: "var(--text-sm)",
-            color: "var(--ink-700)",
+            color: "var(--text-body)",
             margin: 0,
             lineHeight: 1.5,
           }}
@@ -265,7 +265,7 @@ export function Browse() {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "var(--text-3xl)",
-              color: "var(--ink-900)",
+              color: "var(--text-strong)",
               margin: 0,
             }}
           >
@@ -275,7 +275,7 @@ export function Browse() {
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "var(--text-sm)",
-              color: "var(--ink-500)",
+              color: "var(--text-muted)",
             }}
           >
             {tracks.length} tracks

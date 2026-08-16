@@ -50,9 +50,9 @@ export function Dialog({ open = true, onClose, title, icon, children, footer, wi
         style={{
           width,
           maxWidth: "100%",
-          background: "var(--white)",
+          background: "var(--surface-card)",
           borderRadius: "var(--radius-lg)",
-          border: "var(--border-chunky) solid var(--ink-900)",
+          border: "var(--border-chunky) solid var(--border-ink)",
           boxShadow: "var(--shadow-pop-lg)",
           overflow: "hidden",
           outline: "none",
@@ -65,7 +65,7 @@ export function Dialog({ open = true, onClose, title, icon, children, footer, wi
           alignItems: "center",
           gap: 12,
           padding: "18px 20px",
-          borderBottom: "var(--border-base) solid var(--ink-100)",
+          borderBottom: "var(--border-base) solid var(--border-subtle)",
         }}>
           {icon && (
             <span style={{
@@ -79,7 +79,7 @@ export function Dialog({ open = true, onClose, title, icon, children, footer, wi
           {onClose && (
             <button type="button" onClick={onClose} aria-label="Close" style={{
               display: "grid", placeItems: "center", width: 32, height: 32, cursor: "pointer",
-              background: "transparent", border: "none", borderRadius: "var(--radius-xs)", color: "var(--ink-500)",
+              background: "transparent", border: "none", borderRadius: "var(--radius-xs)", color: "var(--text-muted)",
             }}>
               <Icon name="x" size={20} />
             </button>
@@ -91,7 +91,7 @@ export function Dialog({ open = true, onClose, title, icon, children, footer, wi
         {footer && (
           <div style={{
             display: "flex", justifyContent: "flex-end", gap: 10, padding: "16px 20px",
-            borderTop: "var(--border-base) solid var(--ink-100)", background: "var(--ink-50)",
+            borderTop: "var(--border-base) solid var(--border-subtle)", background: "var(--surface-sunken)",
           }}>
             {footer}
           </div>

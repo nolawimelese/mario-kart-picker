@@ -40,7 +40,7 @@ export function TierBadge({ tier = "S", size = "md", style, ...rest }: TierBadge
         lineHeight: 1,
         paddingTop: dim * 0.06,
         borderRadius: "var(--radius-sm)",
-        border: "var(--border-base) solid var(--ink-900)",
+        border: "var(--border-base) solid var(--border-ink)",
         boxShadow: "var(--shadow-pop-sm)",
         ...style,
       }}

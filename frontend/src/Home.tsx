@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TopNav } from "./design-system";
 import { Browse } from "./Browse";
 import { CoursePicker } from "./CoursePicker";
+import { SettingsPanel } from "./SettingsPanel";
 
 /**
  * MK Picker home page — TopNav plus the active section's content.
@@ -9,18 +10,20 @@ import { CoursePicker } from "./CoursePicker";
  */
 export function Home() {
   const [tab, setTab] = useState("browse");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
     <div
       style={{
         minHeight: "100vh",
         width: "100%",
-        background: "var(--cream)",
+        background: "var(--surface-cream)",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <TopNav value={tab} onChange={setTab} />
+      <TopNav value={tab} onChange={setTab} onSettingsClick={() => setSettingsOpen(true)} />
+      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       {tab === "course-picker" ? (
         <CoursePicker />
       ) : tab === "browse" ? (
@@ -37,7 +40,7 @@ export function Home() {
             padding: 40,
           }}
         >
-          <h1 style={{ fontSize: "clamp(40px, 6vw, 64px)", color: "var(--ink-900)", textAlign: "center" }}>
+          <h1 style={{ fontSize: "clamp(40px, 6vw, 64px)", color: "var(--text-strong)", textAlign: "center" }}>
             Welcome to the grid.
           </h1>
           <p style={{ fontSize: "var(--text-lg)", color: "var(--text-muted)", textAlign: "center" }}>

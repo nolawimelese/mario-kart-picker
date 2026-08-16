@@ -19,8 +19,8 @@ export function Switch({ checked = false, onChange, label, disabled = false, sty
         width: 48,
         height: 28,
         borderRadius: "var(--radius-pill)",
-        background: checked ? "var(--boost-500)" : "var(--ink-300)",
-        border: "var(--border-base) solid var(--ink-900)",
+        background: checked ? "var(--boost-500)" : "var(--border-strong)",
+        border: "var(--border-base) solid var(--border-ink)",
         cursor: disabled ? "not-allowed" : "pointer",
         transition: "background var(--dur-base) var(--ease-out)",
         flexShrink: 0,
@@ -35,7 +35,7 @@ export function Switch({ checked = false, onChange, label, disabled = false, sty
           height: 20,
           borderRadius: "var(--radius-pill)",
           background: "#fff",
-          border: "var(--border-base) solid var(--ink-900)",
+          border: "var(--border-base) solid var(--border-ink)",
           transition: "left var(--dur-base) var(--ease-snap)",
         }}
       />
@@ -53,7 +53,7 @@ export function Switch({ checked = false, onChange, label, disabled = false, sty
         fontFamily: "var(--font-body)",
         fontWeight: "var(--weight-semibold)",
         fontSize: "var(--text-md)",
-        color: "var(--ink-800)",
+        color: "var(--text-strong)",
         userSelect: "none",
         ...style,
       }}

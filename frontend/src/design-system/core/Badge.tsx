@@ -18,7 +18,7 @@ export function Badge({ children, color = "boost", soft = false, dot = false, st
     success: ["var(--mushroom)", "#d6f7e4", "#0e8f48"],
     danger: ["var(--shell-red)", "#ffe0e6", "#d61f3f"],
     purple: ["var(--star-purple)", "#ece4ff", "#6d39e0"],
-    neutral: ["var(--ink-600)", "var(--ink-100)", "var(--ink-700)"],
+    neutral: ["var(--ink-600)", "var(--surface-sunken)", "var(--text-strong)"],
   };
   const [solid, softBg, softFg] = map[color] || map.boost;
   const isSoftCoin = color === "coin";

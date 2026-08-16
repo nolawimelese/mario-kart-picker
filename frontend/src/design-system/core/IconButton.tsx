@@ -28,10 +28,10 @@ export function IconButton({
   const dim = sizes[size] || sizes.md;
 
   const palettes = {
-    primary: { bg: "var(--boost-500)", fg: "#fff", bd: "var(--ink-900)", pop: true },
-    secondary: { bg: "var(--drift-500)", fg: "#fff", bd: "var(--ink-900)", pop: true },
-    outline: { bg: "var(--white)", fg: "var(--ink-900)", bd: "var(--ink-900)", pop: true },
-    ghost: { bg: "transparent", fg: "var(--ink-600)", bd: "transparent", pop: false },
+    primary: { bg: "var(--boost-500)", fg: "#fff", bd: "var(--border-ink)", pop: true },
+    secondary: { bg: "var(--drift-500)", fg: "#fff", bd: "var(--border-ink)", pop: true },
+    outline: { bg: "var(--surface-card)", fg: "var(--text-strong)", bd: "var(--border-ink)", pop: true },
+    ghost: { bg: "transparent", fg: "var(--text-body)", bd: "transparent", pop: false },
   };
   const p = palettes[variant] || palettes.outline;
   const interactive = !disabled && p.pop;
@@ -46,7 +46,7 @@ export function IconButton({
       onMouseDown={(e) => { if (interactive) { e.currentTarget.style.transform = "translate(2px,2px)"; e.currentTarget.style.boxShadow = "0 0 0 var(--ink-900)"; } rest.onMouseDown?.(e); }}
       onMouseUp={(e) => { if (interactive) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "var(--shadow-pop-sm)"; } rest.onMouseUp?.(e); }}
       onMouseLeave={(e) => { if (interactive) { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "var(--shadow-pop-sm)"; } if (variant === "ghost") e.currentTarget.style.background = "transparent"; rest.onMouseLeave?.(e); }}
-      onMouseEnter={(e) => { if (!disabled && variant === "ghost") e.currentTarget.style.background = "var(--ink-100)"; rest.onMouseEnter?.(e); }}
+      onMouseEnter={(e) => { if (!disabled && variant === "ghost") e.currentTarget.style.background = "var(--surface-sunken)"; rest.onMouseEnter?.(e); }}
       style={{
         display: "inline-grid",
         placeItems: "center",

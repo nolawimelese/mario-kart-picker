@@ -30,9 +30,9 @@ export function Tag({ children, icon, selected = false, removable = false, onRem
         fontSize: "var(--text-sm)",
         lineHeight: 1,
         cursor: onClick ? "pointer" : "default",
-        color: selected ? "var(--boost-600)" : "var(--ink-700)",
-        background: selected ? "var(--boost-50)" : "var(--white)",
-        border: `var(--border-base) solid ${selected ? "var(--boost-500)" : "var(--ink-200)"}`,
+        color: selected ? "var(--boost-600)" : "var(--text-body)",
+        background: selected ? "var(--boost-50)" : "var(--surface-card)",
+        border: `var(--border-base) solid ${selected ? "var(--boost-500)" : "var(--border-subtle)"}`,
         borderRadius: "var(--radius-pill)",
         transition: "background var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast)",
         userSelect: "none",
@@ -53,7 +53,7 @@ export function Tag({ children, icon, selected = false, removable = false, onRem
             width: 20,
             height: 20,
             borderRadius: 999,
-            background: selected ? "var(--boost-100)" : "var(--ink-100)",
+            background: selected ? "var(--boost-100)" : "var(--surface-sunken)",
             cursor: "pointer",
           }}
         >
