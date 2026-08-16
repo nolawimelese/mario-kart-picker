@@ -46,7 +46,7 @@ export function Tag({ children, icon, selected = false, removable = false, onRem
         <span
           role="button"
           aria-label="Remove"
-          onClick={(e) => { e.stopPropagation(); onRemove && onRemove(e); }}
+          onClick={(e) => { e.stopPropagation(); if (onRemove) onRemove(e); }}
           style={{
             display: "inline-grid",
             placeItems: "center",

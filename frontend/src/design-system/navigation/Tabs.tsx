@@ -24,7 +24,7 @@ export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "o
 export function Tabs({ tabs = [], value, defaultValue, onChange, style, ...rest }: TabsProps) {
   const [internal, setInternal] = React.useState(defaultValue ?? (tabs[0] && tabs[0].value));
   const active = value !== undefined ? value : internal;
-  const select = (v: string) => { setInternal(v); onChange && onChange(v); };
+  const select = (v: string) => { setInternal(v); if (onChange) onChange(v); };
 
   return (
     <div
