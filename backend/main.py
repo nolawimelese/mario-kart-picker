@@ -18,9 +18,17 @@ allowed_origins = [
     if origin.strip()
 ]
 
+# Origins that can't be enumerated ahead of time -- notably Netlify deploy
+# previews, which get a per-PR hostname like
+#   https://deploy-preview-7--<site>.netlify.app
+# Starlette matches this with re.fullmatch, so the pattern must cover the whole
+# origin (scheme included). Unset means no regex matching, exact origins only.
+allowed_origin_regex = os.environ.get("ALLOWED_ORIGIN_REGEX", "").strip() or None
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=allowed_origin_regex,
     allow_methods=["*"],
     allow_headers=["*"],
 )
