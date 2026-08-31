@@ -18,6 +18,14 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
 
 **Database:** SQLite
 
+**Hosting:** Netlify (frontend), Render (backend)
+
+## Deployment
+
+- The **frontend** is hosted on Netlify.
+- The **backend** is hosted on Render as a web service
+- The **database** ships with the repo: `backend/mariokart.db` is paired with the backend. The build command runs the seed_all python script upon the backend being spun up
+
 ## Roadmap
 
 <details>
@@ -82,9 +90,8 @@ A web app that recommends which track to vote for in Mario Kart 8 Deluxe based o
 > <details>
 > <summary>Footer</summary>
 >
-> - [ ] add footer
->   - [ ] add copyright disclosure (or lack of)
->   - [ ] data collection disclosure (or lack of)
+> - [x] add footer
+>   - [x] data collection disclosure (or lack of)
 >
 > </details>
 
