@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TopNav } from "./design-system";
+import { Footer, TopNav } from "./design-system";
 import { Browse } from "./Browse";
 import { CoursePicker } from "./CoursePicker";
 import { SettingsPanel } from "./SettingsPanel";
@@ -24,30 +24,34 @@ export function Home() {
     >
       <TopNav value={tab} onChange={setTab} onSettingsClick={() => setSettingsOpen(true)} />
       <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
-      {tab === "course-picker" ? (
-        <CoursePicker />
-      ) : tab === "browse" ? (
-        <Browse />
-      ) : (
-        <main
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 12,
-            padding: 40,
-          }}
-        >
-          <h1 style={{ fontSize: "clamp(40px, 6vw, 64px)", color: "var(--text-strong)", textAlign: "center" }}>
-            Welcome to the grid.
-          </h1>
-          <p style={{ fontSize: "var(--text-lg)", color: "var(--text-muted)", textAlign: "center" }}>
-            Pick a section above to get started.
-          </p>
-        </main>
-      )}
+      {/* Grows to fill the viewport so the footer sits on the floor on short pages. */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {tab === "course-picker" ? (
+          <CoursePicker />
+        ) : tab === "browse" ? (
+          <Browse />
+        ) : (
+          <main
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 12,
+              padding: 40,
+            }}
+          >
+            <h1 style={{ fontSize: "clamp(40px, 6vw, 64px)", color: "var(--text-strong)", textAlign: "center" }}>
+              Welcome to the grid.
+            </h1>
+            <p style={{ fontSize: "var(--text-lg)", color: "var(--text-muted)", textAlign: "center" }}>
+              Pick a section above to get started.
+            </p>
+          </main>
+        )}
+      </div>
+      <Footer />
     </div>
   );
 }
