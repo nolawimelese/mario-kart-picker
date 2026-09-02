@@ -1,10 +1,12 @@
 import os
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, ConfigDict
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from sqlalchemy.orm import Session, joinedload
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from database import SessionLocal
 from models import Track
@@ -24,6 +26,38 @@ allowed_origins = [
 # Starlette matches this with re.fullmatch, so the pattern must cover the whole
 # origin (scheme included). Unset means no regex matching, exact origins only.
 allowed_origin_regex = os.environ.get("ALLOWED_ORIGIN_REGEX", "").strip() or None
+
+# The largest body any real request needs: the client posts a position plus
+# exactly 3 track ids. Starlette buffers the whole body before Pydantic runs,
+# so the model constraints below can't stop a memory-exhaustion POST on their
+# own -- this header check rejects one before it is read.
+MAX_BODY_BYTES = 8 * 1024
+
+
+async def limit_body_size(request: Request, call_next):
+    """Reject oversized payloads up front. A chunked request sends no
+    Content-Length and slips past this; the field constraints on
+    RecommendRequest still bound what it can do."""
+    content_length = request.headers.get("content-length")
+    if content_length is not None:
+        try:
+            too_big = int(content_length) > MAX_BODY_BYTES
+        except ValueError:
+            return JSONResponse(
+                status_code=400, content={"detail": "invalid Content-Length"}
+            )
+        if too_big:
+            return JSONResponse(
+                status_code=413, content={"detail": "request body too large"}
+            )
+    return await call_next(request)
+
+
+# Order matters: the last middleware added is the outermost, so CORS must be
+# added after the size guard. Otherwise a 413 would go out without
+# Access-Control-Allow-Origin and the browser would report an opaque CORS
+# failure instead of the real status.
+app.add_middleware(BaseHTTPMiddleware, dispatch=limit_body_size)
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,8 +88,8 @@ class TrackOut(BaseModel):
 class RecommendRequest(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
-    position: int
-    track_ids: list[int]
+    position: int = Field(ge=1, le=FIELD_SIZE)
+    track_ids: list[int] = Field(min_length=1, max_length=3)
 
 
 class RecommendationOut(BaseModel):
@@ -94,12 +128,6 @@ def list_tracks(db: Session = Depends(get_db)):
 
 @app.post("/recommend", response_model=list[RecommendationOut])
 def recommend(req: RecommendRequest, db: Session = Depends(get_db)):
-    if not 1 <= req.position <= FIELD_SIZE:
-        raise HTTPException(
-            status_code=422,
-            detail=f"position must be between 1 and {FIELD_SIZE}",
-        )
-
     tracks = (
         db.query(Track)
         .options(joinedload(Track.strategies))
