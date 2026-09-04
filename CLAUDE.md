@@ -48,7 +48,19 @@ strategies) from the DB, calls `score_track`, sorts, and flags the top result as
 is the canonical source of track/strategy data — the full 96-course, 24-cup catalog — and is
 idempotent (tracks matched by id, strategies by `track_id` + band).
 
-Always seed a fresh DB with `seed_all.py` alone.
+Always seed a fresh DB with `seed_all.py` alone. **Reseeding does not affect a running
+server** — `/tracks` is served from a snapshot built once per process (see below), so restart
+`uvicorn` after seeding, and hard-refresh the browser too — `max-age=3600` means it will
+otherwise serve the old catalog from its own cache for an hour.
+
+`/tracks` and `/recommend` are rate limited per client IP with `slowapi` (60/min and 30/min,
+in-memory, keyed on `get_ipaddr` so Render's proxy doesn't collapse every caller into one
+bucket); `/` and `/health` are deliberately unlimited. `/tracks` returns a pre-serialized
+`Response` — the catalog body and its `ETag` are built on the first request and cached in
+module state — with `Cache-Control: public, max-age=3600`, and answers a matching
+`If-None-Match` with a 304. The bytes are identical to what `response_model=list[TrackOut]`
+emitted, so the wire contract is unchanged; the `response_model` stays on the route only to
+keep the OpenAPI schema. `docs/fixing_exploits.md` records why.
 
 **The recommender (`recommender.py`)** is the heart of the app. A track's score = a graded
 position-band fit plus a small trait adjustment:

@@ -1,10 +1,15 @@
+import hashlib
+import json
 import os
 
-from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi import FastAPI, Depends, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_ipaddr
 from sqlalchemy.orm import Session, joinedload
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -12,7 +17,29 @@ from database import SessionLocal
 from models import Track
 from recommender import FIELD_SIZE, score_track
 
+# Per-IP request budgets. Without them every request reaches SQLite directly and
+# a bare loop saturates a small instance; CORS is no help, since it constrains
+# browsers only. `/` and `/health` are deliberately left off so Render's health
+# check can never be throttled. In-memory storage (the default) is fine for a
+# single instance.
+TRACKS_RATE_LIMIT = "60/minute"
+RECOMMEND_RATE_LIMIT = "30/minute"
+
+# How long a client may reuse /tracks without revalidating. The catalog only
+# changes on reseed, so an hour of browser caching keeps most repeat traffic off
+# the instance entirely.
+CATALOG_CACHE_SECONDS = 3600
+
+# Render terminates TLS at a proxy, so request.client.host is that proxy for
+# every caller -- get_remote_address would put the whole world in one bucket and
+# lock everyone out at once. get_ipaddr reads X-Forwarded-For instead. That
+# header is client-spoofable, so this slows a casual request loop rather than
+# stopping a determined attacker, which is the bar we need here.
+limiter = Limiter(key_func=get_ipaddr)
+
 app = FastAPI()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 allowed_origins = [
     origin.strip()
@@ -121,13 +148,58 @@ def health():
     return {"status": "ok"}
 
 
+# The serialized /tracks body and its ETag, built on first request and never
+# invalidated: Render reseeds during the build, before this process starts, so
+# the catalog cannot change under a running server. Locally that means a
+# `python seed_all.py` needs a uvicorn restart to show up. Two threadpool
+# workers racing to build this produce the same bytes, so there is no lock.
+_catalog_snapshot: tuple[str, bytes] | None = None
+
+
+def _catalog(db: Session) -> tuple[str, bytes]:
+    """The (etag, body) pair for /tracks, built once per process."""
+    global _catalog_snapshot
+    if _catalog_snapshot is None:
+        payload = [
+            TrackOut.model_validate(track).model_dump(by_alias=True)
+            for track in db.query(Track).all()
+        ]
+        # Same dump options as Starlette's JSONResponse, so the bytes match
+        # what FastAPI produced from the response_model before.
+        body = json.dumps(
+            payload, ensure_ascii=False, allow_nan=False, separators=(",", ":")
+        ).encode()
+        _catalog_snapshot = (f'"{hashlib.sha256(body).hexdigest()[:32]}"', body)
+    return _catalog_snapshot
+
+
+def _matches_etag(header: str | None, etag: str) -> bool:
+    """Whether an If-None-Match header covers `etag`. Weak validators (`W/"..."`)
+    count -- the body one was issued for is byte-identical to this one."""
+    if not header:
+        return False
+    return any(
+        candidate.strip() == "*" or candidate.strip().removeprefix("W/") == etag
+        for candidate in header.split(",")
+    )
+
+
 @app.get("/tracks", response_model=list[TrackOut])
-def list_tracks(db: Session = Depends(get_db)):
-    return db.query(Track).all()
+@limiter.limit(TRACKS_RATE_LIMIT)
+def list_tracks(request: Request, db: Session = Depends(get_db)):
+    etag, body = _catalog(db)
+    headers = {
+        "ETag": etag,
+        "Cache-Control": f"public, max-age={CATALOG_CACHE_SECONDS}",
+    }
+    if _matches_etag(request.headers.get("if-none-match"), etag):
+        return Response(status_code=304, headers=headers)
+    return Response(content=body, media_type="application/json", headers=headers)
 
 
 @app.post("/recommend", response_model=list[RecommendationOut])
-def recommend(req: RecommendRequest, db: Session = Depends(get_db)):
+@limiter.limit(RECOMMEND_RATE_LIMIT)
+def recommend(request: Request, req: RecommendRequest, db: Session = Depends(get_db)):
     tracks = (
         db.query(Track)
         .options(joinedload(Track.strategies))
