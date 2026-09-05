@@ -1,6 +1,8 @@
 import hashlib
 import json
+import logging
 import os
+import re
 
 from fastapi import FastAPI, Depends, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -47,12 +49,76 @@ allowed_origins = [
     if origin.strip()
 ]
 
+logger = logging.getLogger(__name__)
+
+
+def _has_unescaped_dot(pattern: str) -> bool:
+    r"""Whether `pattern` contains a `.` acting as a wildcard.
+
+    A left-to-right scan rather than a regex over a regex: a backslash consumes
+    the next character (so `\.` and `\d` are fine) and `[...]` is skipped, since
+    a dot inside a character class is already literal. A class written `[]]` --
+    a leading literal `]` -- ends the class early here; that can only produce a
+    false rejection, which is logged loudly rather than failing open, and no
+    origin regex looks like that.
+    """
+    i = 0
+    in_class = False
+    while i < len(pattern):
+        char = pattern[i]
+        if char == "\\":
+            i += 2
+            continue
+        if in_class:
+            if char == "]":
+                in_class = False
+        elif char == "[":
+            in_class = True
+        elif char == ".":
+            return True
+        i += 1
+    return False
+
+
+def _checked_origin_regex(raw: str) -> str | None:
+    """Validate an operator-supplied origin regex, or drop it with a warning.
+
+    Starlette anchors the match (re.fullmatch) but does nothing about escaping,
+    so `mysite.netlify.app` also matches `mysiteXnetlifyYapp` -- a domain an
+    attacker can register. This value lives in the Render dashboard, outside
+    the repo, so it is validated here rather than trusted.
+
+    Dropping the regex is deliberately fail-safe, not fail-closed: the
+    production origin comes from ALLOWED_ORIGINS and keeps working, so only
+    deploy previews lose CORS. Taking the whole service down over a bad preview
+    pattern would be worse than the flaw it guards against.
+    """
+    pattern = raw.strip()
+    if not pattern:
+        return None
+    if _has_unescaped_dot(pattern):
+        logger.warning(
+            "Ignoring ALLOWED_ORIGIN_REGEX %r: it contains an unescaped '.', which "
+            "matches any character and would allow lookalike domains. Escape every "
+            "literal dot (e.g. 'netlify\\.app').",
+            pattern,
+        )
+        return None
+    try:
+        re.compile(pattern)
+    except re.error as exc:
+        logger.warning("Ignoring ALLOWED_ORIGIN_REGEX %r: %s", pattern, exc)
+        return None
+    return pattern
+
+
 # Origins that can't be enumerated ahead of time -- notably Netlify deploy
 # previews, which get a per-PR hostname like
 #   https://deploy-preview-7--<site>.netlify.app
 # Starlette matches this with re.fullmatch, so the pattern must cover the whole
 # origin (scheme included). Unset means no regex matching, exact origins only.
-allowed_origin_regex = os.environ.get("ALLOWED_ORIGIN_REGEX", "").strip() or None
+# The value is validated rather than trusted -- see _checked_origin_regex.
+allowed_origin_regex = _checked_origin_regex(os.environ.get("ALLOWED_ORIGIN_REGEX", ""))
 
 # The largest body any real request needs: the client posts a position plus
 # exactly 3 track ids. Starlette buffers the whole body before Pydantic runs,

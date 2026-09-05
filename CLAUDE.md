@@ -115,7 +115,12 @@ with backend `TrackOut`.
 The dev server proxies `/api/*` to `http://localhost:8000` (see `vite.config.ts`), stripping the
 `/api` prefix; `VITE_API_URL` overrides the base. CORS on the backend reads its allowlist from
 the `ALLOWED_ORIGINS` env var (comma-separated, defaults to `http://localhost:5173`) — set it to
-the deployed frontend origin(s) in production.
+the deployed frontend origin(s) in production. `ALLOWED_ORIGIN_REGEX` covers origins that can't
+be listed ahead of time (Netlify deploy previews); **literal dots must be escaped**, since
+Starlette anchors the match but treats a bare `.` as a wildcard. `_checked_origin_regex` in
+`main.py` refuses a pattern with an unescaped dot, or one that won't compile, and logs a warning
+instead of applying it — so a bad value is silently dropped rather than honored, and exact
+origins keep working.
 
 **Design system (`frontend/src/design-system/`)** is a self-contained component library exported
 through one barrel (`index.ts`) — import UI from `./design-system`, not from individual files.
