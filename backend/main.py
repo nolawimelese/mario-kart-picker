@@ -11,7 +11,6 @@ from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_ipaddr
 from sqlalchemy.orm import Session, joinedload
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -32,16 +31,42 @@ RECOMMEND_RATE_LIMIT = "30/minute"
 # the instance entirely.
 CATALOG_CACHE_SECONDS = 3600
 
+
+def client_ip(request: Request) -> str:
+    """The calling client's address, from X-Forwarded-For when present.
+
+    slowapi ships get_ipaddr for this, but through 0.1.10 it tests
+    `"X_FORWARDED_FOR" in request.headers` -- underscores, where the real header
+    is `X-Forwarded-For`. Starlette's header lookup is case-insensitive, not
+    punctuation-insensitive, so that test never matches and get_ipaddr silently
+    degrades to get_remote_address: behind Render's proxy every caller shares
+    one bucket, and a single busy client rate-limits everybody. Hence our own.
+
+    A proxy appends to the header, so the left-most entry is the original
+    client; the rest are intermediate proxies.
+    """
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        first = forwarded.split(",")[0].strip()
+        if first:
+            return first
+    if request.client and request.client.host:
+        return request.client.host
+    return "127.0.0.1"
+
+
 # Render terminates TLS at a proxy, so request.client.host is that proxy for
-# every caller -- get_remote_address would put the whole world in one bucket and
-# lock everyone out at once. get_ipaddr reads X-Forwarded-For instead. That
+# every caller -- keying on it would put the whole world in one bucket and lock
+# everyone out at once, so the forwarded client address is used instead. That
 # header is client-spoofable, so this slows a casual request loop rather than
 # stopping a determined attacker, which is the bar we need here.
-limiter = Limiter(key_func=get_ipaddr)
+limiter = Limiter(key_func=client_ip)
 
 app = FastAPI()
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+# Starlette types the handler's `exc` as Exception, slowapi's narrows it to
+# RateLimitExceeded -- correct here, lines up with slowapi's own wiring.
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore[arg-type]
 
 allowed_origins = [
     origin.strip()

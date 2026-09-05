@@ -54,8 +54,9 @@ server** — `/tracks` is served from a snapshot built once per process (see bel
 otherwise serve the old catalog from its own cache for an hour.
 
 `/tracks` and `/recommend` are rate limited per client IP with `slowapi` (60/min and 30/min,
-in-memory, keyed on `get_ipaddr` so Render's proxy doesn't collapse every caller into one
-bucket); `/` and `/health` are deliberately unlimited. `/tracks` returns a pre-serialized
+in-memory, keyed on the local `client_ip` helper — the left-most `X-Forwarded-For` entry —
+so Render's proxy doesn't collapse every caller into one bucket; slowapi's own `get_ipaddr`
+looks up the header name with underscores and never matches it); `/` and `/health` are deliberately unlimited. `/tracks` returns a pre-serialized
 `Response` — the catalog body and its `ETag` are built on the first request and cached in
 module state — with `Cache-Control: public, max-age=3600`, and answers a matching
 `If-None-Match` with a 304. The bytes are identical to what `response_model=list[TrackOut]`
