@@ -1,0 +1,16 @@
+# Security headers for the deployed site
+#
+# Content-Security-Policy must stay one line
+#
+#   default-src 'self'         also covers /site.webmanifest and anything unlisted
+#   script-src  'self'         one bundle, same-origin; no inline <script> in index.html
+#   style-src   + 'unsafe-inline' for the design system's style={{...}} objects,
+#               + fonts.googleapis.com for the @import in tokens/fonts.css (Vite
+#                 leaves remote @imports in the built CSS -- they are NOT inlined)
+#   font-src    fonts.gstatic.com serves the actual .woff2 files
+#   connect-src the Render backend (VITE_API_URL); 'self' covers the /api dev fallback
+#   frame-ancestors 'none'     clickjacking
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://mario-kart-picker.onrender.com; frame-ancestors 'none'
