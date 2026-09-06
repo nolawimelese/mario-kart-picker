@@ -171,11 +171,36 @@ async def limit_body_size(request: Request, call_next):
     return await call_next(request)
 
 
+async def catch_unhandled(request: Request, call_next):
+    """Turn any unhandled error into a flat `{"detail": "internal error"}` 500.
+
+    Not registered with `add_exception_handler(Exception, ...)`: that handler
+    runs in ServerErrorMiddleware, which Starlette documents as *always* the
+    outermost layer -- outside CORSMiddleware -- so its response would go out
+    without Access-Control-Allow-Origin and the browser would report an opaque
+    CORS failure instead of the 500. Same reasoning as the 413 and 429 above.
+    Anything that escapes CORSMiddleware itself still falls through to
+    Starlette's own plain-text "Internal Server Error", which is equally flat.
+
+    Handled exceptions never reach here -- ExceptionMiddleware sits further in
+    and has already turned HTTPException, RequestValidationError and
+    RateLimitExceeded into responses. Catching the exception also stops it
+    bubbling up to uvicorn, so the traceback is logged here or nowhere.
+    """
+    try:
+        return await call_next(request)
+    except Exception:
+        logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+        return JSONResponse(status_code=500, content={"detail": "internal error"})
+
+
 # Order matters: the last middleware added is the outermost, so CORS must be
-# added after the size guard. Otherwise a 413 would go out without
-# Access-Control-Allow-Origin and the browser would report an opaque CORS
-# failure instead of the real status.
+# added after the size guard and the catch-all. Otherwise a 413 or a 500 would
+# go out without Access-Control-Allow-Origin and the browser would report an
+# opaque CORS failure instead of the real status.
 app.add_middleware(BaseHTTPMiddleware, dispatch=limit_body_size)
+
+app.add_middleware(BaseHTTPMiddleware, dispatch=catch_unhandled)
 
 app.add_middleware(
     CORSMiddleware,
