@@ -48,7 +48,20 @@ strategies) from the DB, calls `score_track`, sorts, and flags the top result as
 is the canonical source of track/strategy data — the full 96-course, 24-cup catalog — and is
 idempotent (tracks matched by id, strategies by `track_id` + band).
 
-Always seed a fresh DB with `seed_all.py` alone.
+Always seed a fresh DB with `seed_all.py` alone. **Reseeding does not affect a running
+server** — `/tracks` is served from a snapshot built once per process (see below), so restart
+`uvicorn` after seeding, and hard-refresh the browser too — `max-age=3600` means it will
+otherwise serve the old catalog from its own cache for an hour.
+
+`/tracks` and `/recommend` are rate limited per client IP with `slowapi` (60/min and 30/min,
+in-memory, keyed on the local `client_ip` helper — the left-most `X-Forwarded-For` entry —
+so Render's proxy doesn't collapse every caller into one bucket; slowapi's own `get_ipaddr`
+looks up the header name with underscores and never matches it); `/` and `/health` are deliberately unlimited. `/tracks` returns a pre-serialized
+`Response` — the catalog body and its `ETag` are built on the first request and cached in
+module state — with `Cache-Control: public, max-age=3600`, and answers a matching
+`If-None-Match` with a 304. The bytes are identical to what `response_model=list[TrackOut]`
+emitted, so the wire contract is unchanged; the `response_model` stays on the route only to
+keep the OpenAPI schema. `docs/fixing_exploits.md` records why.
 
 **The recommender (`recommender.py`)** is the heart of the app. A track's score = a graded
 position-band fit plus a small trait adjustment:
@@ -103,7 +116,12 @@ with backend `TrackOut`.
 The dev server proxies `/api/*` to `http://localhost:8000` (see `vite.config.ts`), stripping the
 `/api` prefix; `VITE_API_URL` overrides the base. CORS on the backend reads its allowlist from
 the `ALLOWED_ORIGINS` env var (comma-separated, defaults to `http://localhost:5173`) — set it to
-the deployed frontend origin(s) in production.
+the deployed frontend origin(s) in production. `ALLOWED_ORIGIN_REGEX` covers origins that can't
+be listed ahead of time (Netlify deploy previews); **literal dots must be escaped**, since
+Starlette anchors the match but treats a bare `.` as a wildcard. `_checked_origin_regex` in
+`main.py` refuses a pattern with an unescaped dot, or one that won't compile, and logs a warning
+instead of applying it — so a bad value is silently dropped rather than honored, and exact
+origins keep working.
 
 **Design system (`frontend/src/design-system/`)** is a self-contained component library exported
 through one barrel (`index.ts`) — import UI from `./design-system`, not from individual files.
