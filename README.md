@@ -4,7 +4,7 @@
 
 <br>
 
-**Finish the race, read the ballot, and MKPicker tells you which of the three tracks to vote for — tuned to where you just placed in Mario Kart 8 Deluxe.**
+**Finish the race, read the ballot, and MKPicker tells you which track to vote for**
 
 <br>
 
