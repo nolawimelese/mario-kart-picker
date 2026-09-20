@@ -2,8 +2,6 @@
 
 <img src=".github/assets/logo.svg" alt="MK Picker" width="100%">
 
-<img src=".github/assets/track.svg" alt="Three karts lapping an oval race track" width="100%">
-
 <br>
 
 **Finish the race, read the ballot, and MKPicker tells you which of the three tracks to vote for — tuned to where you just placed in Mario Kart 8 Deluxe.**
@@ -46,231 +44,75 @@
 
 <img src=".github/assets/divider.svg" alt="" width="100%">
 
-## 🏁 The Race Briefing
+## 🏁 Come Race Ready!
 
-Every online lobby runs the same loop: race, vote on the next track, race again. MKPicker sits
-in the gap between those two steps. It treats your **finishing position** from the last race as
-your spot on the **next starting grid** (1 = pole, 12 = the back of a 12-kart field) and ranks
-the three tracks on the ballot by how well each one plays from there.
+Every online lobby runs the same loop:
 
-| | Lap | What happens |
-|:-:|:--|:--|
-| 🏎️ | **Where did you finish?** | Pick P1 through P12. |
-| 🗳️ | **What's on the ballot?** | Search-and-add the three tracks from any of the 96 courses. |
-| 🏆 | **Get the verdict** | A recommended pick with a 0–100 pick score, the runners-up, and a plain-English reason for each. |
-| 📻 | **Log the winner** | The lobby doesn't always vote your way — tell MKPicker which track actually won and get that track's pre-race tips. |
+1. Race
+2. Vote on the next track
+3. Race again.
+
+MKPicker sits in the gap between the races. Mario Kart 8 treats your **finishing position** from the last race as
+your spot on the **next starting grid**. MKPicker takes that starting position, and ranks the three tracks on the ballot by how well each one plays from there.
+
+|     | Lap                       | What happens                                                                                                       |
+| :-: | :------------------------ | :----------------------------------------------------------------------------------------------------------------- |
+| 🏎️  | **Where did you finish?** | Pick P1 through P12.                                                                                               |
+| 🗳️  | **What's on the ballot?** | Search-and-add the three tracks from any of the 96 courses.                                                        |
+| 🏆  | **Get the verdict**       | A recommended pick with a 0–100 pick score, the runners-up, and a plain-English reason for each.                   |
+| 📻  | **Log the winner**        | The lobby doesn't always vote your way! Tell MKPicker which track actually won and get that track's pre-race tips. |
 
 Two tabs live in the app:
 
-- **Track Picker** — the flagship. A four-phase flow: `input` → `loading` (an arcade spin that
-  holds for at least 1.4 s, even when the API is faster) → `ranked` → `tips`.
-- **Browse** — the full catalog of 96 courses across 24 cups, filterable by name, terrain
-  (Sand / Ice) and trait tags, with a DLC pill on the 48 Booster Course Pass tracks.
+- **Browse** — the full catalog of 96 courses across 24 cups, filterable by name and 10+ traits!
+- **Track Picker** — the flagship feature! Find which track best suits your position. A four-phase flow: `input` → `loading` → `ranked` → `tips`.
 
-Plus a settings panel with **dark mode**, and a footer that discloses exactly how much data the
-app collects about you: none.
+There is a settings panel with some accessibility features.
 
 <img src=".github/assets/divider.svg" alt="" width="100%">
 
-## 🧠 Under the Hood — How the Pick Is Made
+## 🧠 Under the Hood
 
-The recommender (`backend/recommender.py`) is rule-based, not learned. A track's score is a
-**graded position-band fit** plus a **small trait adjustment**:
+The recommender (`backend/recommender.py`) is rule-based, not learned. A track's score is a **graded position-band fit** with small adjustments based on traits.
 
-```text
-fit    = band_fit(position, best_strategy)      # 1.0 inside the band; −0.25 per position outside; floor 0
-lean   = Σ TRAIT_LEAN[trait]                    # < 0 = a front-runner's track, > 0 = a chaos track
-adjust = lean × ((position − 1) / 11 − 0.5)     # −0.5 at P1 … +0.5 at P12
-score  = max(0, fit + 0.15 × adjust) / MAX_RAW_SCORE   # normalized to 0–1, shown as 0–100
-```
-
-**🎯 Band fit.** Every track carries at least one `Strategy` with a starting-grid band
+**🎯 Band fit:** Every track carries at least one `Strategy` with a starting-grid band
 `[position_min, position_max]`. Inside the band the fit is a perfect `1.0`; outside it decays
-linearly to `0` over `FALLOFF = 4` positions. A track can carry more than one band (a front
-"defend" plan and a back "gamble" plan) and the best-fitting one wins — 93 of the 96 tracks have
-a single band, 3 have two.
+linearly to `0` over `FALLOFF` positions.
 
 **🍄 Trait lean.** Each track is tagged with traits, and each trait leans toward the front or the
-back of the grid. The signed sum is the track's *lean*; it's multiplied by how far back you're
+back of the grid. The signed sum is the track's _lean_; it's multiplied by how far back you're
 starting, so a chaos track scores higher from P12 and a clean-lines track scores higher from P1.
 `TRAIT_BONUS_WEIGHT = 0.15` keeps this subordinate to band fit — traits break ties, they never
 override the band.
 
-| Trait | Lean | Reads as |
-|:--|--:|:--|
-| Shortcuts | `+0.8` | back-of-grid — catch-up potential |
-| Rerouting | `+0.7` | back-of-grid |
-| Hazards | `+0.6` | back-of-grid — chaos |
-| City | `+0.3` | back-of-grid |
-| Glider · Water · Cave | `0.0` | neutral |
-| Anti-grav | `−0.2` | front-running |
-| Coins | `−0.5` | front-running — reward a controlled lead |
-
-Tuning the recommender means editing these constants and the seed data.
-
 <img src=".github/assets/divider.svg" alt="" width="100%">
 
-## 🚦 Start Your Engines
+## 🗺️ The Data Model
 
-MKPicker is two independent apps talking over a REST API. Run them in two terminals.
-
-**You'll need:** [Node.js](https://nodejs.org/) (with npm) and **Python 3.10+**.
-
-### ⚙️ Pit crew, backend side
-
-```bash
-cd backend
-python -m venv .venv                 # optional — .vscode/settings.json expects it here
-# Windows:  .venv\Scripts\activate       macOS/Linux:  source .venv/bin/activate
-pip install -r requirements.txt
-python seed_all.py                   # creates + seeds mariokart.db with all 96 tracks (idempotent, safe to re-run)
-uvicorn main:app --reload            # → http://localhost:8000
-```
-
-The seeded `mariokart.db` ships with the repo, so the seed step is a safety net rather than a
-requirement — but `seed_all.py` is the canonical source of track and strategy data, so run it
-anyway. Sanity check: `curl http://localhost:8000/health` → `{"status":"ok"}`.
-
-### 🎮 Pit crew, frontend side
-
-```bash
-cd frontend
-npm install
-npm run dev                          # → http://localhost:5173
-```
-
-The Vite dev server proxies `/api/*` to `http://localhost:8000` and strips the `/api` prefix
-(see `vite.config.ts`), so no CORS setup is needed locally.
-
-| Command | Does |
-|:--|:--|
-| `npm run dev` | Vite dev server with HMR |
-| `npm run build` | `tsc -b && vite build` — type-checking is part of the build |
-| `npm run lint` | ESLint |
-| `npm run preview` | Serve the production build locally |
-
-### 🟢 Green light
-
-Open **http://localhost:5173**, clear the splash screen, and you're on the Track Picker.
-
-> There is no test suite in this repo. `npm run build` (type-check) and `npm run lint` are the
-> gates.
-
-<img src=".github/assets/divider.svg" alt="" width="100%">
-
-## 🎛️ Tuning Knobs
-
-| Variable | Side | Default | What it does |
-|:--|:-:|:--|:--|
-| `ALLOWED_ORIGINS` | backend | `http://localhost:5173` | Comma-separated CORS allowlist. Set it to the deployed frontend origin(s). |
-| `ALLOWED_ORIGIN_REGEX` | backend | *(unset)* | Regex for origins you can't list ahead of time, e.g. Netlify deploy previews. **Escape literal dots** (`netlify\.app`) — the pattern is validated, and one with a bare `.` or that won't compile is dropped with a warning instead of applied. |
-| `VITE_API_URL` | frontend | `/api` | Base URL for API calls. Point it at the backend's public URL in production. |
-
-<img src=".github/assets/divider.svg" alt="" width="100%">
-
-## 📡 Pit Radio — The API
-
-Field names cross the wire in **camelCase** (`header_color` → `headerColor`); the backend
-serializes with a Pydantic alias generator and accepts either spelling on input.
-
-| Method | Route | Rate limit | Returns |
-|:-:|:--|:-:|:--|
-| `GET` | `/` | — | `{"status": "ok"}` |
-| `GET` | `/health` | — | `{"status": "ok"}` — Render's health check, deliberately never throttled |
-| `GET` | `/tracks` | 60/min | Every track (without its strategies). Served from a per-process snapshot with an `ETag` and `Cache-Control: public, max-age=3600`; a matching `If-None-Match` gets a `304`. |
-| `POST` | `/recommend` | 30/min | The ballot, ranked best-first, with the top result flagged `recommended` |
-
-Rate limits are per client IP (left-most `X-Forwarded-For` entry, so a proxy doesn't put every
-caller in one bucket). Request bodies over 8 KB are refused with a `413` before they're read.
-
-### `POST /recommend`
-
-```jsonc
-// request — position 1..12, one to three track ids
-{ "position": 9, "trackIds": [1, 2, 3] }
-```
-
-```jsonc
-// response — real output for the request above
-[
-  {
-    "trackId": 3,
-    "name": "Sweet Sweet Canyon",
-    "score": 0.8706,
-    "strategyTips": [
-      "Break the chocolate wall shortcut every lap — it's worth the risk from the back.",
-      "Carry a mushroom to cut the soda-lake corner.",
-      "Line up the stained-glass glider launch for a clean landing."
-    ],
-    "reason": "Suits starts from P7-P12 (you're on P9). Its Shortcuts favors back-of-grid play, which suits your spot on the grid.",
-    "recommended": true
-  },
-  { "trackId": 2, "name": "Water Park", "score": 0.6298, "recommended": false, /* … */ },
-  { "trackId": 1, "name": "Mario Kart Stadium", "score": 0.0, "recommended": false, /* … */ }
-]
-```
-
-An unknown id returns `404 {"detail": "unknown track ids: [999]"}`; a position outside 1–12 or
-more than three ids is a `422`.
-
-<img src=".github/assets/divider.svg" alt="" width="100%">
-
-## 🗺️ Course Data — The Data Model
-
-Two SQLite tables (`backend/models.py`), one-to-many, seeded by `backend/seed_all.py`:
+Two SQLite tables
 
 **`tracks`** — one row per course
 
-| Column | Type | Notes |
-|:--|:--|:--|
-| `id` | int | Primary key; ids 1–48 are base game, 49–96 are DLC |
-| `name`, `cup` | str | e.g. `Sweet Sweet Canyon`, `Mushroom Cup` |
-| `laps` | int | |
-| `header_color` | str | A design-token reference like `var(--boost-500)` — colors live in CSS, not in Python |
-| `description` | str | The flavor blurb on the Browse card |
-| `terrain` | str | Slippery off-road class: `"None"`, `"Sand"` or `"Ice"`. Drives the Browse badge and filter only — the recommender doesn't read it (yet) |
-| `traits` | JSON list | Tags from the nine-trait vocabulary above |
-| `dlc` | bool | Booster Course Pass track — shows the DLC pill |
+| Column         | Type      | Notes                                                                                                                                   |
+| :------------- | :-------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | int       | Primary key; ids 1–48 are base game, 49–96 are DLC                                                                                      |
+| `name`, `cup`  | str       | e.g. `Sweet Sweet Canyon`, `Mushroom Cup`                                                                                               |
+| `laps`         | int       |                                                                                                                                         |
+| `header_color` | str       | A design-token reference like `var(--boost-500)` — colors live in CSS, not in Python                                                    |
+| `description`  | str       | The flavor blurb on the Browse card                                                                                                     |
+| `terrain`      | str       | Slippery off-road class: `"None"`, `"Sand"` or `"Ice"`. Drives the Browse badge and filter only — the recommender doesn't read it (yet) |
+| `traits`       | JSON list | Tags from the nine-trait vocabulary above                                                                                               |
+| `dlc`          | bool      | Booster Course Pass track — shows the DLC pill                                                                                          |
 
-**`strategies`** — one or two rows per track
+<br></br>
 
-| Column | Type | Notes |
-|:--|:--|:--|
-| `track_id` | FK → `tracks.id` | |
-| `position_min`, `position_max` | int | The starting-grid band this plan is built for |
-| `tips` | JSON list | The short, actionable tips shown on the `tips` screen |
+**`strategies`** — 1-2 rows per track
 
-> **🔩 Contributor note — the trait strings are a three-way invariant.** The same nine names must
-> agree across the seed data (`seed_all.py`), `TRAIT_LEAN` in `recommender.py`, and `ALL_TRAITS`
-> in `frontend/src/Browse.tsx`. A trait missing from `TRAIT_LEAN` silently scores `0`; one
-> missing from `ALL_TRAITS` disappears from the Browse filter. Adding or renaming a trait means
-> editing all three. Likewise the frontend `Track` interface (`frontend/src/api/tracks.ts`) must
-> mirror the backend `TrackOut` model.
-
-<img src=".github/assets/divider.svg" alt="" width="100%">
-
-## 🔧 Pit Stop
-
-| Symptom | Cause | Fix |
-|:--|:--|:--|
-| Re-seeded, but the app still shows the old catalog | `/tracks` is served from a snapshot built once per process, and the browser caches it for an hour | Restart `uvicorn`, then **hard-refresh** the browser |
-| Ballot search is empty / the picker shows a "couldn't load tracks" hint | The backend isn't running, or isn't on port 8000 | Start it — the input phase surfaces the fetch error on purpose so a downed backend fails visibly |
-| `429 Too Many Requests` | Per-IP rate limit (`/tracks` 60/min, `/recommend` 30/min) | Wait a minute; both budgets are in-memory and reset with the process |
-| Browser reports an opaque CORS failure in production | The frontend origin isn't in `ALLOWED_ORIGINS`, or `ALLOWED_ORIGIN_REGEX` was dropped for an unescaped `.` | Check the backend logs for the `Ignoring ALLOWED_ORIGIN_REGEX` warning and fix the value |
-| `404 unknown track ids` | An id that isn't in the DB | Ids run 1–96; reseed if the DB is partial |
-
-<img src=".github/assets/divider.svg" alt="" width="100%">
-
-## 🚀 Race Day — Deployment
-
-- **Frontend → Netlify.** Build with `VITE_API_URL` set to the backend's public URL.
-  `frontend/public/_headers` ships the security headers, including a Content-Security-Policy
-  whose `connect-src` must name the backend origin.
-- **Backend → Render** as a web service. The build command runs `seed_all.py`, so the catalog is
-  rebuilt before each process starts. Set `ALLOWED_ORIGINS` to the Netlify origin and, for deploy
-  previews, `ALLOWED_ORIGIN_REGEX` to something like
-  `https://deploy-preview-\d+--<site>\.netlify\.app`.
-- **Database.** `backend/mariokart.db` is checked in and travels with the backend.
+| Column                         | Type             | Notes                                                 |
+| :----------------------------- | :--------------- | :---------------------------------------------------- |
+| `track_id`                     | FK → `tracks.id` |                                                       |
+| `position_min`, `position_max` | int              | The starting-grid band this plan is built for         |
+| `tips`                         | JSON list        | The short, actionable tips shown on the `tips` screen |
 
 <img src=".github/assets/divider.svg" alt="" width="100%">
 
@@ -353,12 +195,11 @@ Two SQLite tables (`backend/models.py`), one-to-many, seeded by `backend/seed_al
 
 </details>
 
-<img src=".github/assets/divider.svg" alt="" width="100%">
+<br></br>
 
 <div align="center">
 
-**🎌 Fine print.** MKPicker is a fan-made project and is not affiliated with or endorsed by
-Nintendo. Mario Kart, course names and cup names are trademarks of Nintendo, used here only to
-identify the tracks. No Nintendo artwork or assets are included — just the colors and the energy.
+MKPicker is a fan-made project and is not affiliated with or endorsed by
+Nintendo.
 
 </div>
