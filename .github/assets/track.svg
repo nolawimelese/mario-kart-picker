@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-labelledby="t">
+  <title id="t">Three karts lapping an oval race track</title>
+  <defs>
+    <!-- the lap: clockwise stadium oval, karts follow this path -->
+    <path id="lap" d="M 330 82 H 870 A 88 88 0 0 1 870 258 H 330 A 88 88 0 0 1 330 82 Z"/>
+
+    <pattern id="checker" width="14" height="14" patternUnits="userSpaceOnUse">
+      <rect width="7" height="7" fill="#161320"/>
+      <rect x="7" y="7" width="7" height="7" fill="#161320"/>
+      <rect x="7" width="7" height="7" fill="#fff8ef"/>
+      <rect y="7" width="7" height="7" fill="#fff8ef"/>
+    </pattern>
+
+    <linearGradient id="itembox" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#18c0e8"/>
+      <stop offset="0.5" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#ff5ba8"/>
+    </linearGradient>
+
+    <!-- one kart, nose pointing +x; body colour comes from currentColor -->
+    <g id="kart">
+      <g stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.55">
+        <line x1="-24" y1="-5" x2="-32" y2="-5"/>
+        <line x1="-22" y1="0"  x2="-36" y2="0"/>
+        <line x1="-24" y1="5"  x2="-32" y2="5"/>
+      </g>
+      <g fill="#161320">
+        <rect x="-15" y="-13" width="9" height="6" rx="2"/>
+        <rect x="-15" y="7"   width="9" height="6" rx="2"/>
+        <rect x="7"   y="-12" width="8" height="5" rx="2"/>
+        <rect x="7"   y="7"   width="8" height="5" rx="2"/>
+      </g>
+      <rect x="-19" y="-8" width="4" height="16" rx="1.5" fill="#161320"/>
+      <rect x="-16" y="-9" width="34" height="18" rx="6" fill="currentColor" stroke="#161320" stroke-width="2.5"/>
+      <path d="M 16 -4 L 21 0 L 16 4 Z" fill="#161320"/>
+      <circle cx="-2" cy="0" r="5" fill="#fff8ef" stroke="#161320" stroke-width="2"/>
+      <circle cx="-3" cy="-1.5" r="1.5" fill="#161320"/>
+    </g>
+  </defs>
+
+  <!-- asphalt card -->
+  <rect width="1200" height="340" rx="28" fill="#161320"/>
+
+  <!-- checkered edges, clipped by the card corners -->
+  <clipPath id="card"><rect width="1200" height="340" rx="28"/></clipPath>
+  <g clip-path="url(#card)" opacity="0.9">
+    <rect x="0" y="0" width="28" height="340" fill="url(#checker)"/>
+    <rect x="1172" y="0" width="28" height="340" fill="url(#checker)"/>
+  </g>
+
+  <!-- track: runoff, red/white curbs, asphalt, centre line -->
+  <use href="#lap" xlink:href="#lap" fill="none" stroke="#221e30" stroke-width="128"/>
+  <use href="#lap" xlink:href="#lap" fill="none" stroke="#ff3b5c" stroke-width="74"/>
+  <use href="#lap" xlink:href="#lap" fill="none" stroke="#fff8ef" stroke-width="74" stroke-dasharray="20 20"/>
+  <use href="#lap" xlink:href="#lap" fill="none" stroke="#322c42" stroke-width="58"/>
+  <use href="#lap" xlink:href="#lap" fill="none" stroke="#fff8ef" stroke-width="3" stroke-dasharray="18 16" opacity="0.5"/>
+
+  <!-- start / finish line on the bottom straight -->
+  <rect x="588" y="229" width="24" height="58" fill="url(#checker)"/>
+
+  <!-- infield: three-lane grid marks, like a starting grid -->
+  <g fill="none" stroke="#6b6375" stroke-width="4" stroke-linecap="round" opacity="0.8">
+    <path d="M 520 150 h 40 M 580 150 h 40 M 640 150 h 40"/>
+    <path d="M 520 170 h 40 M 580 170 h 40 M 640 170 h 40"/>
+    <path d="M 520 190 h 40 M 580 190 h 40 M 640 190 h 40"/>
+  </g>
+
+  <!-- coins on the racing line -->
+  <g fill="#ffc42e" stroke="#f0ac00" stroke-width="2">
+    <circle cx="470" cy="82" r="6"/><circle cx="500" cy="82" r="6"/><circle cx="530" cy="82" r="6"/>
+    <circle cx="700" cy="258" r="6"/><circle cx="730" cy="258" r="6"/><circle cx="760" cy="258" r="6"/>
+  </g>
+
+  <!-- an item box that spins on the top straight -->
+  <g transform="translate(870 82)">
+    <rect x="-10" y="-10" width="20" height="20" rx="4" fill="url(#itembox)" stroke="#fff8ef" stroke-width="2" opacity="0.9">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- the field: three karts at three paces, so they overtake each other -->
+  <g style="color:#ff3b5c">
+    <use href="#kart" xlink:href="#kart" transform="scale(1.3)"/>
+    <animateMotion dur="6.6s" begin="0s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#lap" xlink:href="#lap"/>
+    </animateMotion>
+  </g>
+  <g style="color:#2e7df6">
+    <use href="#kart" xlink:href="#kart" transform="scale(1.3)"/>
+    <animateMotion dur="7.3s" begin="-2.4s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#lap" xlink:href="#lap"/>
+    </animateMotion>
+  </g>
+  <g style="color:#ffc42e">
+    <use href="#kart" xlink:href="#kart" transform="scale(1.3)"/>
+    <animateMotion dur="8.1s" begin="-5.1s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#lap" xlink:href="#lap"/>
+    </animateMotion>
+  </g>
+</svg>
