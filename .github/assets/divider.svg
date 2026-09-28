@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="14" role="presentation">
+  <!-- arcade pill: boost-500 fill, 2px ink outline, 2px hard pop shadow (as the splash loading bar) -->
+  <rect x="3" y="3" width="99.5%" height="10" rx="5" fill="#161320"/>
+  <rect x="1" y="1" width="99.5%" height="10" rx="5" fill="#ff6a1a" stroke="#161320" stroke-width="2"/>
+</svg>
