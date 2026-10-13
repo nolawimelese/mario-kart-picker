@@ -118,80 +118,81 @@ Two SQLite tables
 
 ## 🏆 Grand Prix Standings — Roadmap
 
+**🏁 Cup 1 — Development** (complete)
+
 <details>
-<summary><b>🏁 Cup 1 — Development</b> (complete)</summary>
+<summary>Browse Tab</summary>
 
-> <details>
-> <summary>Browse Tab</summary>
->
-> - [x] UI
-> - [x] Seed track table with information contained on each track card
-> - [x] Remove template cards, link backend so cards contain real information
->   - mushroom cup only is in right now, after testing, full list will go in
-> - [x] Add dlc status
-> - [x] Seed the remaining tracks
->   - all 24 cups / 96 courses via `seed_all.py`; also fills out the terrain filter with real Sand/Ice grades
->
-> </details>
-
-> <details>
-> <summary>Track Picker</summary>
->
-> - [x] UI
-> - [x] Seed strategies table
->   - with demo tracks so far
-> - [x] Develop rule based algo
->   - [x] weigh in track traits to break ties
-> - [x] Pre racing tips & tricks page
->
-> </details>
-
-> <details>
-> <summary>Deployment</summary>
->
-> - [x] finalize app
->   - [x] delete unused files
-> - [x] fix lint errors
-> - [x] remove ngrok from vite config
-> - [x] add health check endpoint
-> - [x] research deployment options
-> - [x] make CORS origins configurable (`ALLOWED_ORIGINS` env var) for a deployed frontend host
-> - [x] ship the seeded database with the repo instead of gitignoring it
-> - [x] deploy backend and frontend
-> - [x] make deployment adjustments
->
-> </details>
+- [x] UI
+- [x] Seed track table with information contained on each track card
+- [x] Remove template cards, link backend so cards contain real information
+  - mushroom cup only is in right now, after testing, full list will go in
+- [x] Add dlc status
+- [x] Seed the remaining tracks
+  - all 24 cups / 96 courses via `seed_all.py`; also fills out the terrain filter with real Sand/Ice grades
 
 </details>
 
 <details>
-<summary><b>⭐ Cup 2 — Post-Deployment</b> (in progress)</summary>
+<summary>Track Picker</summary>
 
-> <details>
-> <summary>Settings</summary>
->
-> - [x] add settings panel
->   - [x] add dark mode
->     - [x] add dark mode palette
->     - [x] add switch in panel
->
-> </details>
+- [x] UI
+- [x] Seed strategies table
+  - with demo tracks so far
+- [x] Develop rule based algo
+  - [x] weigh in track traits to break ties
+- [x] Pre racing tips & tricks page
 
-> <details>
-> <summary>Footer</summary>
->
-> - [x] add footer
->   - [x] data collection disclosure (or lack of)
->
-> </details>
+</details>
 
-> <details>
-> <summary>Mobile</summary>
->
-> - [ ] add mobile portrait mode support
->   - (WIP)
->
-> </details>
+<details>
+<summary>Deployment</summary>
+
+- [x] finalize app
+  - [x] delete unused files
+- [x] fix lint errors
+- [x] remove ngrok from vite config
+- [x] add health check endpoint
+- [x] research deployment options
+- [x] make CORS origins configurable (`ALLOWED_ORIGINS` env var) for a deployed frontend host
+- [x] ship the seeded database with the repo instead of gitignoring it
+- [x] deploy backend and frontend
+- [x] make deployment adjustments
+
+</details>
+
+**⭐ Cup 2 — Post-Deployment** (in progress)
+
+<details>
+<summary>Settings</summary>
+
+- [x] add settings panel
+  - [x] add dark mode
+    - [x] add dark mode palette
+    - [x] add switch in panel
+
+</details>
+
+<details>
+<summary>Footer</summary>
+
+- [x] add footer
+  - [x] data collection disclosure (or lack of)
+
+</details>
+
+<details>
+<summary>Mobile</summary>
+
+- [ ] add mobile portrait mode support
+  - (WIP)
+
+</details>
+
+<details>
+<summary>Post-post deployment</summary>
+
+- [ ] refactor into single server application
 
 </details>
 
