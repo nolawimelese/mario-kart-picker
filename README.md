@@ -190,9 +190,11 @@ Two SQLite tables
 </details>
 
 <details>
-<summary>Post-post deployment</summary>
+<summary>Deployment config</summary>
 
 - [ ] refactor into single server application
+  - [ ] research how to deploy on just render or netlify
+  - [ ] look into dockerizing app (?)
 
 </details>
 
