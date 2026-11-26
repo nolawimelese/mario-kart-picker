@@ -18,29 +18,20 @@ from database import SessionLocal
 from models import Track
 from recommender import FIELD_SIZE, score_track
 
-# Per-IP request budgets. Without them every request reaches SQLite directly and
-# a bare loop saturates a small instance; CORS is no help, since it constrains
-# browsers only. `/` and `/health` are deliberately left off so Render's health
-# check can never be throttled. In-memory storage (the default) is fine for a
-# single instance.
+# Per-IP request budgets
 TRACKS_RATE_LIMIT = "60/minute"
 RECOMMEND_RATE_LIMIT = "30/minute"
 
-# How long a client may reuse /tracks without revalidating. The catalog only
-# changes on reseed, so an hour of browser caching keeps most repeat traffic off
-# the instance entirely.
+# How long a client may reuse /tracks without revalidating
 CATALOG_CACHE_SECONDS = 3600
 
 
 def client_ip(request: Request) -> str:
-    """The calling client's address, from X-Forwarded-For when present.
+    """The calling client's address
 
-    slowapi ships get_ipaddr for this, but through 0.1.10 it tests
-    `"X_FORWARDED_FOR" in request.headers` -- underscores, where the real header
-    is `X-Forwarded-For`. Starlette's header lookup is case-insensitive, not
-    punctuation-insensitive, so that test never matches and get_ipaddr silently
-    degrades to get_remote_address: behind Render's proxy every caller shares
-    one bucket, and a single busy client rate-limits everybody. Hence our own.
+    slowapi has get_ipaddr, but it tests `"X_FORWARDED_FOR" 
+    in `request.headers` not `X-Forwarded-For`. Test never 
+    matches and get_ipaddr silently  degrades to get_remote_address:
 
     A proxy appends to the header, so the left-most entry is the original
     client; the rest are intermediate proxies.
@@ -55,11 +46,7 @@ def client_ip(request: Request) -> str:
     return "127.0.0.1"
 
 
-# Render terminates TLS at a proxy, so request.client.host is that proxy for
-# every caller -- keying on it would put the whole world in one bucket and lock
-# everyone out at once, so the forwarded client address is used instead. That
-# header is client-spoofable, so this slows a casual request loop rather than
-# stopping a determined attacker, which is the bar we need here.
+# use forwarded client address instead of TLS
 limiter = Limiter(key_func=client_ip)
 
 app = FastAPI()
@@ -76,16 +63,8 @@ allowed_origins = [
 
 logger = logging.getLogger(__name__)
 
-
 def _has_unescaped_dot(pattern: str) -> bool:
     r"""Whether `pattern` contains a `.` acting as a wildcard.
-
-    A left-to-right scan rather than a regex over a regex: a backslash consumes
-    the next character (so `\.` and `\d` are fine) and `[...]` is skipped, since
-    a dot inside a character class is already literal. A class written `[]]` --
-    a leading literal `]` -- ends the class early here; that can only produce a
-    false rejection, which is logged loudly rather than failing open, and no
-    origin regex looks like that.
     """
     i = 0
     in_class = False
@@ -107,16 +86,6 @@ def _has_unescaped_dot(pattern: str) -> bool:
 
 def _checked_origin_regex(raw: str) -> str | None:
     """Validate an operator-supplied origin regex, or drop it with a warning.
-
-    Starlette anchors the match (re.fullmatch) but does nothing about escaping,
-    so `mysite.netlify.app` also matches `mysiteXnetlifyYapp` -- a domain an
-    attacker can register. This value lives in the Render dashboard, outside
-    the repo, so it is validated here rather than trusted.
-
-    Dropping the regex is deliberately fail-safe, not fail-closed: the
-    production origin comes from ALLOWED_ORIGINS and keeps working, so only
-    deploy previews lose CORS. Taking the whole service down over a bad preview
-    pattern would be worse than the flaw it guards against.
     """
     pattern = raw.strip()
     if not pattern:
@@ -137,18 +106,12 @@ def _checked_origin_regex(raw: str) -> str | None:
     return pattern
 
 
-# Origins that can't be enumerated ahead of time -- notably Netlify deploy
-# previews, which get a per-PR hostname like
+# for netlify deploy previews, which get a per-PR hostname like
 #   https://deploy-preview-7--<site>.netlify.app
-# Starlette matches this with re.fullmatch, so the pattern must cover the whole
-# origin (scheme included). Unset means no regex matching, exact origins only.
-# The value is validated rather than trusted -- see _checked_origin_regex.
 allowed_origin_regex = _checked_origin_regex(os.environ.get("ALLOWED_ORIGIN_REGEX", ""))
 
-# The largest body any real request needs: the client posts a position plus
-# exactly 3 track ids. Starlette buffers the whole body before Pydantic runs,
-# so the model constraints below can't stop a memory-exhaustion POST on their
-# own -- this header check rejects one before it is read.
+# The largest body any real request needs, position + exactly 3 track ids.
+# rejects big reads before starlette gets to it
 MAX_BODY_BYTES = 8 * 1024
 
 
@@ -173,19 +136,6 @@ async def limit_body_size(request: Request, call_next):
 
 async def catch_unhandled(request: Request, call_next):
     """Turn any unhandled error into a flat `{"detail": "internal error"}` 500.
-
-    Not registered with `add_exception_handler(Exception, ...)`: that handler
-    runs in ServerErrorMiddleware, which Starlette documents as *always* the
-    outermost layer -- outside CORSMiddleware -- so its response would go out
-    without Access-Control-Allow-Origin and the browser would report an opaque
-    CORS failure instead of the 500. Same reasoning as the 413 and 429 above.
-    Anything that escapes CORSMiddleware itself still falls through to
-    Starlette's own plain-text "Internal Server Error", which is equally flat.
-
-    Handled exceptions never reach here -- ExceptionMiddleware sits further in
-    and has already turned HTTPException, RequestValidationError and
-    RateLimitExceeded into responses. Catching the exception also stops it
-    bubbling up to uvicorn, so the traceback is logged here or nowhere.
     """
     try:
         return await call_next(request)
@@ -194,10 +144,7 @@ async def catch_unhandled(request: Request, call_next):
         return JSONResponse(status_code=500, content={"detail": "internal error"})
 
 
-# Order matters: the last middleware added is the outermost, so CORS must be
-# added after the size guard and the catch-all. Otherwise a 413 or a 500 would
-# go out without Access-Control-Allow-Origin and the browser would report an
-# opaque CORS failure instead of the real status.
+# the order that it's added is important
 app.add_middleware(BaseHTTPMiddleware, dispatch=limit_body_size)
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=catch_unhandled)
@@ -263,12 +210,6 @@ def root():
 def health():
     return {"status": "ok"}
 
-
-# The serialized /tracks body and its ETag, built on first request and never
-# invalidated: Render reseeds during the build, before this process starts, so
-# the catalog cannot change under a running server. Locally that means a
-# `python seed_all.py` needs a uvicorn restart to show up. Two threadpool
-# workers racing to build this produce the same bytes, so there is no lock.
 _catalog_snapshot: tuple[str, bytes] | None = None
 
 
